@@ -24,6 +24,9 @@
                 <el-menu-item index="2-1">选项1</el-menu-item>
               </el-submenu>
               <el-menu-item index="6">友情链接</el-menu-item>
+              <el-menu-item index="7">{{
+                $route.query.articleType ? $route.query.articleType : ""
+              }}</el-menu-item>
             </el-menu>
           </div>
           <div class="header-search">
@@ -31,25 +34,44 @@
             <el-button type="primary">我要投稿</el-button>
           </div>
         </div>
-        <!-- 在 vuex中 可以控制 是否进行显示 -->
         <div class="header-technology">
-          <ul><li v-for="item in technologyList" :key="item.id">{{item.name}}</li></ul>
+          <ul>
+            <li v-for="item in technologyList" :key="item.id">
+              {{ item.name }}
+            </li>
+          </ul>
           <div>个人中心</div>
         </div>
       </div>
     </header>
-    <Nuxt />
+    <main>
+      <Nuxt />
+    </main>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      input:'',
-      technologyList:[{ id:1,name:'js' },{ id:2,name:'ts' }],
+      input: "",
+      technologyList: [
+        { id: 1, name: "js" },
+        { id: 2, name: "ts" },
+      ],
       activeIndex: "1",
-      activeIndex2: "1",
     };
+  },
+  watch: {
+    $route: {
+      handler:  function(item){
+        if(item.query.articleType) {
+         this.activeIndex = '7'
+        }
+      },
+      deep: true,
+      // 立即执行
+      immediate:true
+    },
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -95,6 +117,11 @@ export default {
         }
       }
     }
+  }
+  main {
+    width: 12rem;
+    margin: auto;
+    margin-top: 0.1rem;
   }
 }
 </style>
