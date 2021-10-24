@@ -1,5 +1,5 @@
 <template>
-  <div id="wdblog">
+  <div id="wdblog" @scroll="srcollTopFunction">
     <header>
       <div class="wd-header">
         <div class="header-main">
@@ -35,12 +35,15 @@
           </div>
         </div>
         <div class="header-technology">
-          <ul>
-            <li v-for="item in technologyList" :key="item.id">
-              {{ item.name }}
-            </li>
-          </ul>
-          <div>个人中心</div>
+          <div>
+            <ul v-if="technologyState">
+              <li v-for="item in technologyList" :key="item.id">
+                {{ item.name }}
+              </li>
+            </ul>
+            <div v-else>标题</div>
+          </div>
+          <div>我呀账户</div>
         </div>
       </div>
     </header>
@@ -50,6 +53,7 @@
   </div>
 </template>
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -61,22 +65,40 @@ export default {
       activeIndex: "1",
     };
   },
+  computed: {
+    technologyState() {
+      return this.$store.state.technologyState;
+    },
+  },
   watch: {
     $route: {
-      handler:  function(item){
-        if(item.query.articleType) {
-         this.activeIndex = '7'
+      handler: function (item) {
+        if (item.query.articleType) {
+          this.activeIndex = "7";
         }
       },
       deep: true,
       // 立即执行
-      immediate:true
+      immediate: true,
     },
   },
+  mounted(){
+    this.addWindowScroll()
+  },
+
   methods: {
+    // ...mapMutations(['chngeTechnologyState']),
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
+    srcollTopFunction(e){
+      console.log(1)
+    },
+    addWindowScroll(){
+      window.onscroll = (e) => {
+        console.log(e)
+      }
+    }
   },
 };
 </script>
@@ -103,12 +125,17 @@ export default {
         display: flex;
       }
     }
+    .header-scrolltop {
+      position: fixed;
+      top: 0.6rem;
+      left: 0;
+    }
     .header-technology {
+      display: flex;
+      justify-content: space-between;
       width: 100%;
       height: 0.5rem;
       border: 1px solid springgreen;
-      display: flex;
-      justify-content: space-between;
       line-height: 0.5rem;
       ul {
         display: flex;

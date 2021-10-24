@@ -70,6 +70,231 @@
                   </p>
                 </div>
               </div>
+            </li> <li class="article-item" @click="jumpToDetail(1)">
+              <div class="article-item-img"></div>
+              <div class="article-item-content">
+                <h3 class="article-title">标题</h3>
+                <p class="article-desc">
+                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
+                </p>
+                <div class="article-foot">
+                  <!-- 时间 -->
+                  <p>
+                    <i class="icon-time"></i>
+                    <span>2021-10-12</span>
+                  </p>
+                  <!-- 查看 -->
+                  <p>
+                    <i class="icon-check"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 热度 -->
+                  <p>
+                    <i class="icon-hot"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 喜欢 -->
+                  <p>
+                    <i class="icon-like"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 点赞 -->
+                  <p>
+                    <i class="icon-great"></i>
+                    <span>1000</span>
+                  </p>
+                  <!-- 收藏 -->
+                  <p>
+                    <i class="icon-collect"></i>
+                    <span>11000</span>
+                  </p>
+                  <!-- 类型 -->
+                  <p>
+                    <i class="icon-type"></i>
+                    <span>vue</span>
+                  </p>
+                </div>
+              </div>
+            </li> <li class="article-item" @click="jumpToDetail(1)">
+              <div class="article-item-img"></div>
+              <div class="article-item-content">
+                <h3 class="article-title">标题</h3>
+                <p class="article-desc">
+                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
+                </p>
+                <div class="article-foot">
+                  <!-- 时间 -->
+                  <p>
+                    <i class="icon-time"></i>
+                    <span>2021-10-12</span>
+                  </p>
+                  <!-- 查看 -->
+                  <p>
+                    <i class="icon-check"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 热度 -->
+                  <p>
+                    <i class="icon-hot"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 喜欢 -->
+                  <p>
+                    <i class="icon-like"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 点赞 -->
+                  <p>
+                    <i class="icon-great"></i>
+                    <span>1000</span>
+                  </p>
+                  <!-- 收藏 -->
+                  <p>
+                    <i class="icon-collect"></i>
+                    <span>11000</span>
+                  </p>
+                  <!-- 类型 -->
+                  <p>
+                    <i class="icon-type"></i>
+                    <span>vue</span>
+                  </p>
+                </div>
+              </div>
+            </li> <li class="article-item" @click="jumpToDetail(1)">
+              <div class="article-item-img"></div>
+              <div class="article-item-content">
+                <h3 class="article-title">标题</h3>
+                <p class="article-desc">
+                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
+                </p>
+                <div class="article-foot">
+                  <!-- 时间 -->
+                  <p>
+                    <i class="icon-time"></i>
+                    <span>2021-10-12</span>
+                  </p>
+                  <!-- 查看 -->
+                  <p>
+                    <i class="icon-check"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 热度 -->
+                  <p>
+                    <i class="icon-hot"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 喜欢 -->
+                  <p>
+                    <i class="icon-like"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 点赞 -->
+                  <p>
+                    <i class="icon-great"></i>
+                    <span>1000</span>
+                  </p>
+                  <!-- 收藏 -->
+                  <p>
+                    <i class="icon-collect"></i>
+                    <span>11000</span>
+                  </p>
+                  <!-- 类型 -->
+                  <p>
+                    <i class="icon-type"></i>
+                    <span>vue</span>
+                  </p>
+                </div>
+              </div>
+            </li> <li class="article-item" @click="jumpToDetail(1)">
+              <div class="article-item-img"></div>
+              <div class="article-item-content">
+                <h3 class="article-title">标题</h3>
+                <p class="article-desc">
+                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
+                </p>
+                <div class="article-foot">
+                  <!-- 时间 -->
+                  <p>
+                    <i class="icon-time"></i>
+                    <span>2021-10-12</span>
+                  </p>
+                  <!-- 查看 -->
+                  <p>
+                    <i class="icon-check"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 热度 -->
+                  <p>
+                    <i class="icon-hot"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 喜欢 -->
+                  <p>
+                    <i class="icon-like"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 点赞 -->
+                  <p>
+                    <i class="icon-great"></i>
+                    <span>1000</span>
+                  </p>
+                  <!-- 收藏 -->
+                  <p>
+                    <i class="icon-collect"></i>
+                    <span>11000</span>
+                  </p>
+                  <!-- 类型 -->
+                  <p>
+                    <i class="icon-type"></i>
+                    <span>vue</span>
+                  </p>
+                </div>
+              </div>
+            </li> <li class="article-item" @click="jumpToDetail(1)">
+              <div class="article-item-img"></div>
+              <div class="article-item-content">
+                <h3 class="article-title">标题</h3>
+                <p class="article-desc">
+                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
+                </p>
+                <div class="article-foot">
+                  <!-- 时间 -->
+                  <p>
+                    <i class="icon-time"></i>
+                    <span>2021-10-12</span>
+                  </p>
+                  <!-- 查看 -->
+                  <p>
+                    <i class="icon-check"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 热度 -->
+                  <p>
+                    <i class="icon-hot"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 喜欢 -->
+                  <p>
+                    <i class="icon-like"></i>
+                    <span>10000</span>
+                  </p>
+                  <!-- 点赞 -->
+                  <p>
+                    <i class="icon-great"></i>
+                    <span>1000</span>
+                  </p>
+                  <!-- 收藏 -->
+                  <p>
+                    <i class="icon-collect"></i>
+                    <span>11000</span>
+                  </p>
+                  <!-- 类型 -->
+                  <p>
+                    <i class="icon-type"></i>
+                    <span>vue</span>
+                  </p>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -186,27 +411,10 @@ export default {
                 background-position: center center;
                 vertical-align: middle;
               }
-              .icon-time {
-                background-image: url("../assets/icon/time-hover.svg");
+              span {
+                font-size: 0.1rem;
               }
-              .icon-check {
-                background-image: url("../assets/icon/readNum-hover.svg");
-              }
-              .icon-like {
-                background-image: url("../assets/icon/likeNum-hover.svg");
-              }
-              .icon-hot {
-                background-image: url("../assets/icon/hot-hover.svg");
-              }
-              .icon-great {
-                background-image: url("../assets/icon/great-hover.svg");
-              }
-              .icon-collect {
-                background-image: url("../assets/icon/collect-hover.svg");
-              }
-              .icon-type {
-                background-image: url("../assets/icon/type-hover.svg");
-              }
+              
             }
           }
         }
