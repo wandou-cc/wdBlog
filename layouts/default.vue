@@ -1,5 +1,5 @@
 <template>
-  <div id="wdblog" @scroll="srcollTopFunction">
+  <div id="wdblog">
     <header>
       <div class="wd-header">
         <div class="header-main">
@@ -34,7 +34,7 @@
             <el-button type="primary">我要投稿</el-button>
           </div>
         </div>
-        <div class="header-technology">
+        <div :class="header" ref="headerTechnology">
           <div>
             <ul v-if="technologyState">
               <li v-for="item in technologyList" :key="item.id">
@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-import { mapMutations } from "vuex";
+
 export default {
   data() {
     return {
@@ -95,8 +95,10 @@ export default {
       console.log(1)
     },
     addWindowScroll(){
-      window.onscroll = (e) => {
-        console.log(e)
+      window.onscroll = () => {
+        if(document.scrollingElement.scrollTop > 100) {
+          
+        }
       }
     }
   },
