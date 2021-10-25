@@ -1,5 +1,5 @@
 <template>
-  <div id="wdblog" @scroll="srcollTopFunction">
+  <div id="wdblog">
     <header>
       <div class="wd-header">
         <div class="header-main">
@@ -34,16 +34,30 @@
             <el-button type="primary">我要投稿</el-button>
           </div>
         </div>
-        <div class="header-technology">
-          <div>
-            <ul v-if="technologyState">
-              <li v-for="item in technologyList" :key="item.id">
-                {{ item.name }}
-              </li>
-            </ul>
-            <div v-else>标题</div>
+        <div
+          class="header-technology"
+          :class="{ 'header-scrolltop': isAddTechnologyClass }"
+        >
+          <div
+            class="header-content"
+            :class="{ 'content-scrolltop': isAddTechnologyClass }"
+          >
+            <div class="header-left">
+              <ul v-if="technologyState">
+                <li v-for="item in technologyList" :key="item.id">
+                  {{ item.name }}
+                </li>
+              </ul>
+              <h1
+                class="header-title"
+                :class="{ 'header-title-opacity': isAddTechnologyClass }"
+                @click="$router.push('/')"
+              >
+                {{ headerTitle }}
+              </h1>
+            </div>
+            <div>我呀账户</div>
           </div>
-          <div>我呀账户</div>
         </div>
       </div>
     </header>
@@ -53,7 +67,6 @@
   </div>
 </template>
 <script>
-import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -63,11 +76,15 @@ export default {
         { id: 2, name: "ts" },
       ],
       activeIndex: "1",
+      isAddTechnologyClass: false,
     };
   },
   computed: {
     technologyState() {
       return this.$store.state.technologyState;
+    },
+    headerTitle() {
+      return this.$store.state.headerTitle;
     },
   },
   watch: {
@@ -82,23 +99,27 @@ export default {
       immediate: true,
     },
   },
-  mounted(){
-    this.addWindowScroll()
+  mounted() {
+    this.addWindowScroll();
   },
 
   methods: {
-    // ...mapMutations(['chngeTechnologyState']),
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-    srcollTopFunction(e){
-      console.log(1)
+    addWindowScroll() {
+      window.onscroll = () => {
+        if (document.scrollingElement.scrollTop > 200) {
+          this.isAddTechnologyClass = true;
+          this.$store.commit("chngeTechnologyState", {
+            technologyState: false,
+          });
+        } else {
+          this.isAddTechnologyClass = false;
+          this.$store.commit("chngeTechnologyState", { technologyState: true });
+        }
+      };
     },
-    addWindowScroll(){
-      window.onscroll = (e) => {
-        console.log(e)
-      }
-    }
   },
 };
 </script>
@@ -119,7 +140,7 @@ export default {
       justify-content: space-between;
       width: 100%;
       height: 0.6rem;
-      border: 1px solid springgreen;
+      // border: 1px solid springgreen;
       .header-search {
         line-height: 0.6rem;
         display: flex;
@@ -127,20 +148,39 @@ export default {
     }
     .header-scrolltop {
       position: fixed;
-      top: 0.6rem;
+      top: -0.6rem;
       left: 0;
+      transform: translateY(0.6rem);
+      transition: transform 0.6s;
+    }
+    .content-scrolltop {
+      width: 12rem !important;
+      margin: auto;
     }
     .header-technology {
-      display: flex;
-      justify-content: space-between;
       width: 100%;
       height: 0.5rem;
-      border: 1px solid springgreen;
+      z-index: 9999;
       line-height: 0.5rem;
-      ul {
+      .header-content {
         display: flex;
-        li {
-          margin: 0 0.1rem;
+        justify-content: space-between;
+        ul {
+          display: flex;
+          li {
+            margin: 0 0.1rem;
+          }
+        }
+        .header-title {
+          opacity: 0;
+          transform: scale(0);
+          font-size: 0.2rem;
+        }
+        .header-title-opacity {
+          opacity: 1;
+          transform: scale(1);
+          transition: all 1s;
+          cursor: pointer;
         }
       }
     }

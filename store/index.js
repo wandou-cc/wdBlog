@@ -1,19 +1,22 @@
-
 export const state = () => ({
     technologyState: true,
     headerTitle: ""
 })
 
 export const mutations = {
+    // 更改展示状态
     chngeTechnologyState(state,query){
-        let {technologyState,headerTitle} = query
-        // technologyState 为 true 的时候 展示 标题
+        let {technologyState} = query
+        // technologyState 为 true 的时候 展示 列表
         if(technologyState) {
             state.technologyState = true
-            state.headerTitle = headerTitle
         } else {
             state.technologyState = false
         }
-
+    },
+    // 更改标题名称
+    changeTechnologyTitle(state,query) {
+        let {headerTitle} = query
+        state.headerTitle = headerTitle
     }
 }

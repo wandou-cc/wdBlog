@@ -321,9 +321,15 @@ export default {
       activeName: "",
     };
   },
+  mounted(){
+    this.changeStateTitle()
+  },
   methods: {
     handleClick(e) {
       console.log(e);
+    },
+    changeStateTitle(){
+      this.$store.commit('changeTechnologyTitle',{headerTitle:'WD博客'})
     },
     jumpToDetail(articleId) {
       this.$router.push({
