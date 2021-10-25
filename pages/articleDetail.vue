@@ -49,12 +49,19 @@
 </template>
 
 <script>
+
 export default {
   data(){
     return {
-      iconData:Object.freeze({
-        
-      })
+      
+    }
+  },
+  mounted(){
+    this.changeStateTitle()
+  },
+  methods:{
+    changeStateTitle(){
+      this.$store.commit('changeTechnologyTitle',{headerTitle:'标题标题'})
     }
   }
 };
