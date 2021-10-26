@@ -88,7 +88,7 @@
         <el-form-item label="开启评论">
           <el-select
             v-model="submitForm.isComment"
-            placeholder="请选择文章来源"
+            placeholder="是否开启评论功能"
             clearable
           >
             <el-option
@@ -99,6 +99,10 @@
             >
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="determineRelease">确定发布</el-button>
+          <el-button @click="isShowRelease = false">取消/关闭</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -186,7 +190,9 @@ export default {
       console.log(e);
     },
 
-    onSubmit() {},
+    determineRelease() {
+      console.log(this.submitForm)
+    },
     changeStateTitle() {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "添加博客" });
     },

@@ -31,7 +31,7 @@
           </div>
           <div class="header-search">
             <el-input v-model="input" placeholder="请输入内容"></el-input>
-            <el-button type="primary">我要投稿</el-button>
+            <el-button type="primary" @click="$router.push('/postArticle')">我要投稿</el-button>
           </div>
         </div>
         <div
