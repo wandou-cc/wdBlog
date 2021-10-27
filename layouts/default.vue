@@ -31,11 +31,7 @@
           </div>
           <div class="header-search">
             <el-input v-model="input" placeholder="请输入内容"></el-input>
-            <el-button
-              class="btn btn-primary  btn-shine"
-              @click="$router.push('/postArticle')"
-              >我要投稿</el-button
-            >
+            <el-button class="btn btn-primary  btn-shine" @click="$router.push('/postArticle')">我要投稿</el-button>
           </div>
         </div>
         <div
@@ -60,7 +56,7 @@
                 {{ headerTitle }}
               </h1>
             </div>
-            <div>我呀账户</div>
+            <div>我的账户</div>
           </div>
         </div>
       </div>
