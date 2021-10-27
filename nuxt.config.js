@@ -16,7 +16,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["element-ui/lib/theme-chalk/index.css", "@assets/styles/global.less"],
+  css: ["@static/element-ui/index.css", "@assets/styles/global.less"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -44,6 +44,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [/^element-ui/]
+    transpile: [/^element-ui/],
+    // babel: {
+    //   plugins: [
+    //     [ "component", {"libraryName": "element-ui",  "styleLibraryName": "theme-chalk"}] 
+    //   ] 
+    // },
   }
 };

@@ -31,7 +31,11 @@
           </div>
           <div class="header-search">
             <el-input v-model="input" placeholder="请输入内容"></el-input>
-            <el-button type="primary" @click="$router.push('/postArticle')">我要投稿</el-button>
+            <el-button
+              class="btn btn-primary  btn-shine"
+              @click="$router.push('/postArticle')"
+              >我要投稿</el-button
+            >
           </div>
         </div>
         <div
@@ -144,6 +148,62 @@ export default {
       .header-search {
         line-height: 0.6rem;
         display: flex;
+        align-items: center;
+        .btn {
+          width: 1.3rem;
+          height: 0.4rem !important;
+          --hue: 190;
+          padding: 0.1rem;
+          position: relative;
+          font-size: 0.12rem;
+          text-decoration: none;
+          text-transform: uppercase;
+          // background-color: hsl(190, 100%, 41%);
+          // border: 1px solid hsl(190, 100%, 41%);
+
+          outline: transparent;
+          overflow: hidden;
+          cursor: pointer;
+          user-select: none;
+          white-space: nowrap;
+          height: 0.3rem;
+          transition: 0.25s;
+
+          &:hover {
+            background: hsl(var(--hue), 100%, 31%);
+          }
+
+          &-primary {
+            --hue: 187;
+          }
+          &-shine {
+            &::before {
+              position: absolute;
+              content: "";
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(
+                120deg,
+                transparent,
+                hsla(var(--hue), 100%, 41%, 0.5),
+                transparent
+              );
+              transform: translateX(-100%);
+              transition: 0.6s;
+            }
+
+            &:hover {
+              background: transparent;
+              box-shadow: 0 0 0.01rem 0.01rem hsla(var(--hue), 100%, 41%, 0.5);
+            }
+
+            &:hover::before {
+              transform: translateX(100%);
+            }
+          }
+        }
       }
     }
     .header-scrolltop {
