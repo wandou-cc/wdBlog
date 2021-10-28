@@ -218,7 +218,7 @@ export default {
           break;
         case "3":
           title = "关于";
-          path = "/about";
+          path = "/adminAbout";
           break;
       }
       window.history.pushState({ hoverId: activeIndex, name: "" }, title);
