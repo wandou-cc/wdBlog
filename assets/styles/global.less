@@ -1,8 +1,22 @@
-@import "./globalPages.less";
-@import "./reset.less";
+// 颜色
+@font-color:#909399;
+@default-theme-color:#00b3b0;
+@white:#FFF;
+@scrollbar-backageColor:#f5f5f5;
+@scrollbar-thumb-color:rgb(105, 101, 101);
+
+@box-shadow:0 0 0.2rem #909399;
+
+@main-backage-color:rgba(10, 160, 55, 0.2);
+@backage-color:rgba(255,255,255,0.8);
+@header-backage-color:#fff;
+
+// 大小
+@view-width:12rem;
 
 #__nuxt {
   font-size: 0.16rem;
+  background: @main-backage-color;
 }
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
@@ -22,24 +36,49 @@
   border-radius: 0.05rem;
   background-color: @scrollbar-thumb-color;
 }
-.icon-time {
-  background-image: url("../icon/time-hover.svg");
+
+* {
+  margin: 0;
+  box-sizing: border-box;
 }
-.icon-check {
-  background-image: url("../icon/readNum-hover.svg");
+
+fieldset,
+img {
+  border: 0;
 }
-.icon-like {
-  background-image: url("../icon/likeNum-hover.svg");
+img {
+  display: block;
 }
-.icon-hot {
-  background-image: url("../icon/hot-hover.svg");
+address,
+caption,
+cite,
+code,
+dfn,
+th,
+var {
+  font-style: normal;
+  font-weight: normal;
 }
-.icon-great {
-  background-image: url("../icon/great-hover.svg");
+ul,
+ol {
+  padding-left: 0;
+  list-style: none;
 }
-.icon-collect {
-  background-image: url("../icon/collect-hover.svg");
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
 }
-.icon-type {
-  background-image: url("../icon/type-hover.svg");
+select,
+input {
+  vertical-align: middle;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  outline-style: none;
+  -webkit-appearance: none;
+}
+textarea {
+  resize: none;
 }

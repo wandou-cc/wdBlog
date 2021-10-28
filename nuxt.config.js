@@ -16,7 +16,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["@static/element-ui/index.css", "@assets/styles/global.less"],
+  css: ["@static/element-ui/index.css", {src:"@assets/styles/global.less",lang:'less'}],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -29,7 +29,12 @@ export default {
   components: true,
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/style-resources'
   ],
+  styleResources: {
+    less: './assets/styles/global.less'
+  },
+
   axios:{
     proxy:true
   },
@@ -44,11 +49,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [/^element-ui/],
-    // babel: {
-    //   plugins: [
-    //     [ "component", {"libraryName": "element-ui",  "styleLibraryName": "theme-chalk"}] 
-    //   ] 
-    // },
+    transpile: [/^element-ui/]
   }
 };

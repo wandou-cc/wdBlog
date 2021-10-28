@@ -8,7 +8,7 @@
               :default-active="activeIndex"
               class="el-menu-demo"
               mode="horizontal"
-              @select="handleSelect"
+              @select="jumpToHeaderPages"
             >
               <el-menu-item index="1">首页</el-menu-item>
               <el-menu-item index="3">关于</el-menu-item>
@@ -31,7 +31,11 @@
           </div>
           <div class="header-search">
             <el-input v-model="input" placeholder="请输入内容"></el-input>
-            <el-button class="btn btn-primary  btn-shine" @click="$router.push('/postArticle')">我要投稿</el-button>
+            <el-button
+              class="btn btn-primary btn-shine"
+              @click="$router.push('/postArticle')"
+              >我要投稿</el-button
+            >
           </div>
         </div>
         <div
@@ -43,20 +47,39 @@
             :class="{ 'content-scrolltop': isAddTechnologyClass }"
           >
             <div class="header-left">
+              <!-- 显示 技术列表 -->
               <ul v-if="technologyState">
                 <li v-for="item in technologyList" :key="item.id">
                   {{ item.name }}
                 </li>
               </ul>
+              <!-- 显示标题 -->
               <h1
                 class="header-title"
-                :class="{ 'header-title-opacity': isAddTechnologyClass }"
-                @click="$router.push('/')"
+                :class="{
+                  'header-title-opacity': isAddTechnologyClass,
+                  'reveal': isAddTechnologyClass,
+                }"
+                @click="jumpToHome()"
               >
                 {{ headerTitle }}
               </h1>
             </div>
-            <div>我的账户</div>
+            <el-dropdown class="my-account">
+              <el-button type="primary"
+                >我的账户<i class="el-icon-arrow-down el-icon--right"></i
+              ></el-button>
+              <el-dropdown-menu slot="dropdown">
+                <div class="account-avatar">
+                  <p></p>
+                </div>
+                <el-dropdown-item v-for="item in accountList" :key="item.id"
+                  ><span @click="$router.push(item.path)">{{
+                    item.name
+                  }}</span></el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       </div>
@@ -70,6 +93,14 @@
 export default {
   data() {
     return {
+      accountList: Object.freeze([
+        { path: "/login", name: "注册/登录" },
+        { path: "/postArticle", name: "发布文章" },
+        { path: "/myArticle", name: "我的发布" },
+        { path: "/myCollect", name: "我的收藏" },
+        { path: "/myLike", name: "我的喜欢" },
+        { path: "/adminPage", name: "管理页面" },
+      ]),
       input: "",
       technologyList: [
         { id: 1, name: "js" },
@@ -98,15 +129,17 @@ export default {
       // 立即执行
       immediate: true,
     },
+    technologyState(){
+      if(!this.technologyState) {
+        this.titleEffect()
+      }
+    }
   },
   mounted() {
     this.addWindowScroll();
   },
 
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    },
     addWindowScroll() {
       window.onscroll = () => {
         if (document.scrollingElement.scrollTop > 200) {
@@ -120,6 +153,25 @@ export default {
         }
       };
     },
+    jumpToHome() {
+      this.$router.push("/");
+      this.activeIndex = "1";
+    },
+    jumpToPath(value) {
+      console.log(value);
+    },
+    jumpToHeaderPages(activeIndex) {
+      let path;
+      switch (activeIndex) {
+        case "1":
+          path = "/";
+          break;
+      }
+      this.$router.push(path);
+      this.activeIndex = activeIndex;
+    },
+    titleEffect() { 
+    },
   },
 };
 </script>
@@ -129,7 +181,8 @@ export default {
   header {
     width: 100%;
     height: 1.1rem;
-    border: 1px solid #ccc;
+    background: @header-backage-color;
+    box-shadow: 0.1rem 0 0.1rem #ccc;
   }
   .wd-header {
     width: 12rem;
@@ -140,7 +193,10 @@ export default {
       justify-content: space-between;
       width: 100%;
       height: 0.6rem;
-      // border: 1px solid springgreen;
+      .el-menu.el-menu--horizontal {
+        border-bottom: none;
+      }
+
       .header-search {
         line-height: 0.6rem;
         display: flex;
@@ -154,9 +210,6 @@ export default {
           font-size: 0.12rem;
           text-decoration: none;
           text-transform: uppercase;
-          // background-color: hsl(190, 100%, 41%);
-          // border: 1px solid hsl(190, 100%, 41%);
-
           outline: transparent;
           overflow: hidden;
           cursor: pointer;
@@ -208,6 +261,7 @@ export default {
       left: 0;
       transform: translateY(0.6rem);
       transition: transform 0.6s;
+      background: @backage-color;
     }
     .content-scrolltop {
       width: 12rem !important;
@@ -217,20 +271,31 @@ export default {
       width: 100%;
       height: 0.5rem;
       z-index: 9999;
-      line-height: 0.5rem;
       .header-content {
+        height: 100%;
         display: flex;
         justify-content: space-between;
+        .my-account {
+          display: flex;
+          align-items: center;
+        }
         ul {
           display: flex;
+          height: 100%;
           li {
+            line-height: 0.5rem;
             margin: 0 0.1rem;
+            cursor: pointer;
+            &:hover {
+              color: @default-theme-color;
+            }
           }
         }
         .header-title {
           opacity: 0;
           transform: scale(0);
           font-size: 0.2rem;
+          line-height: 0.5rem;
         }
         .header-title-opacity {
           opacity: 1;
@@ -242,9 +307,52 @@ export default {
     }
   }
   main {
+    background: @backage-color;
     width: 12rem;
     margin: auto;
     margin-top: 0.1rem;
+    box-shadow: @box-shadow;
+    border-radius: 0.1rem;
+    padding: 0.2rem;
   }
+}
+
+.account-avatar {
+  text-align: center;
+  height: 0.6rem;
+  p {
+    height: 80%;
+    margin: auto;
+    width: 0.5rem;
+    // border: 1px solid tomato;
+    border-radius: 0.05rem;
+  }
+  i {
+    font-size: 0.14rem;
+  }
+}
+</style>
+
+<style>
+.icon-time {
+  background-image: url("../assets/icon/time-hover.svg");
+}
+.icon-check {
+  background-image: url("../assets/icon/readNum-hover.svg");
+}
+.icon-like {
+  background-image: url("../assets/icon/likeNum-hover.svg");
+}
+.icon-hot {
+  background-image: url("../assets/icon/hot-hover.svg");
+}
+.icon-great {
+  background-image: url("../assets/icon/great-hover.svg");
+}
+.icon-collect {
+  background-image: url("../assets/icon/collect-hover.svg");
+}
+.icon-type {
+  background-image: url("../assets/icon/type-hover.svg");
 }
 </style>

@@ -420,7 +420,6 @@ export default {
               span {
                 font-size: 0.1rem;
               }
-              
             }
           }
         }
