@@ -94,7 +94,7 @@ export default {
   data() {
     return {
       accountList: Object.freeze([
-        { path: "/login", name: "注册/登录" },
+        { path: "/userLogin", name: "注册/登录" },
         { path: "/postArticle", name: "发布文章" },
         { path: "/myArticle", name: "我的发布" },
         { path: "/myLike?type=collect", name: "我的收藏" },
