@@ -69,12 +69,10 @@ export default {
 
 <style lang="less" scoped>
 .wd-article-detail {
-  width: @view-width;
   height: @view-width;
   .article-detail-header {
     height: 1rem;
     width: 100%;
-    border: 1px solid tomato;
     display: flex;
     .header-info {
       flex: 1;
@@ -110,9 +108,8 @@ export default {
       width: 4rem;
       height: 100%;
       padding: 0.1rem;
-      border-left: 1px solid rgb(73, 4, 4);
+      border-left: 1px solid rgb(121, 121, 121);
       text-align: center;
-
     }
   }
 }

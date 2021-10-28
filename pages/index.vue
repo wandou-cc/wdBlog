@@ -332,13 +332,14 @@ export default {
       this.$store.commit('changeTechnologyTitle',{headerTitle:'WD博客'})
     },
     jumpToDetail(articleId) {
-      this.$router.push({
+      this.$router.replace({
         path: "/articleDetail",
         query: {
           articleId,
           articleType:"vue"
         },
       });
+      window.history.pushState({ hoverId: "7", name: "vue" }, '');
     },
   },
 };

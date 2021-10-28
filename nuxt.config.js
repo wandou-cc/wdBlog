@@ -23,8 +23,8 @@ export default {
     "@/plugins/element-ui",
     { src: "@/plugins/vue-mavon-editor", ssr: false },
     '@/plugins/axios',
+    '@plugins/publicFunction.js'
   ],
-
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   modules: [

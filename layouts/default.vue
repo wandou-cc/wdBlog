@@ -6,11 +6,10 @@
           <div class="header-top-main">
             <div class="header-menu">
               <el-menu
-                :default-active="activeIndex"
+                :default-active="headerHoverIndex"
                 class="el-menu-demo"
                 mode="horizontal"
                 @select="jumpToHeaderPages"
-                :key="menuKey"
               >
                 <el-menu-item index="1">首页</el-menu-item>
                 <el-menu-item index="3">关于</el-menu-item>
@@ -103,13 +102,13 @@ export default {
         { path: "/adminPage", name: "管理页面" },
       ]),
       input: "",
-      menuKey:"",
       technologyList: [
         { id: 1, name: "js" },
         { id: 2, name: "ts" },
       ],
-      activeIndex: "1",
+
       isAddTechnologyClass: false,
+      headerHoverIndex: "1",
     };
   },
   computed: {
@@ -122,6 +121,9 @@ export default {
     headerSeventhName() {
       return this.$store.state.headerSeventhName;
     },
+    activeIndex() {
+      return this.$store.state.activeIndex;
+    },
   },
   watch: {
     $route: {
@@ -130,12 +132,13 @@ export default {
           this.$store.commit("changeHeaderSeventhName", {
             seventhName: item.query.articleType,
           });
+          return;
         }
       },
       deep: true,
       immediate: true,
     },
-    // 监听 选中的 id 如果 不是 7 那就 进行 清空选项
+
     activeIndex() {
       if (this.activeIndex !== "7") {
         this.$store.commit("changeHeaderSeventhName", { seventhName: "" });
@@ -144,16 +147,38 @@ export default {
     // 监听导航第七个 如果有内容就 进行设置 id 这样就不需要 在单独设置
     headerSeventhName() {
       if (this.headerSeventhName) {
-        this.activeIndex = "7";
+        this.headerHoverIndex = "7";
       }
+    },
+
+    headerHoverIndex() {
+      console.log(this.headerHoverIndex);
+      this.$store.commit("changeHeaderHoverIndex", {
+        activeIndex: this.headerHoverIndex,
+      });
     },
   },
   mounted() {
-    this.addWindowScroll();
+    
+    this.getStore();
+    this.addEvent();
   },
 
   methods: {
-    addWindowScroll() {
+    getStore() {
+      if (sessionStorage.getItem("store") && this.$route.path !== "/") {
+        this.$store.replaceState(
+          Object.assign(
+            {},
+            this.$store.state,
+            JSON.parse(sessionStorage.getItem("store"))
+          )
+        );
+        this.headerHoverIndex = this.activeIndex;
+      }
+    },
+    addEvent() {
+      window.history.pushState({ hoverId: '1', name: "" }, '');
       window.onscroll = () => {
         if (document.scrollingElement.scrollTop > 200) {
           this.isAddTechnologyClass = true;
@@ -165,27 +190,46 @@ export default {
           this.$store.commit("chngeTechnologyState", { technologyState: true });
         }
       };
+      window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("store", JSON.stringify(this.$store.state));
+      });
+      // 监听历史记录 实现返回前进 功能
+      window.onpopstate = (event) => {
+        this.headerHoverIndex = event.state.hoverId;
+        this.$store.commit("changeHeaderSeventhName", {
+          seventhName: event.state.name,
+        });
+      };
     },
     jumpToHome() {
-      this.$router.push("/");
-      this.activeIndex = "1";
+      this.$router.replace("/");
+      this.headerHoverIndex = "1";
     },
     jumpToPath(value) {
       console.log(value);
     },
     jumpToHeaderPages(activeIndex) {
       let path;
+      let title;
       switch (activeIndex) {
         case "1":
           path = "/";
+          title = "wdblog";
+          break;
+        case "3":
+          title = "关于";
+          path = "/about";
           break;
       }
-      this.$router.push(path);
-      this.activeIndex = activeIndex;
+      window.history.pushState({ hoverId: activeIndex, name: "" }, title);
+      this.$router.replace(path);
+      this.headerHoverIndex = activeIndex;
     },
+    // 投稿
     contribution() {
-      this.$router.push("/postArticle");
+      window.history.pushState({ hoverId: "7", name: "投稿" }, "");
       this.$store.commit("changeHeaderSeventhName", { seventhName: "投稿" });
+      this.$router.replace("/postArticle");
     },
   },
 };
