@@ -2,40 +2,41 @@
   <div id="wdblog">
     <header>
       <div class="wd-header">
-        <div class="header-main">
-          <div class="header-menu">
-            <el-menu
-              :default-active="activeIndex"
-              class="el-menu-demo"
-              mode="horizontal"
-              @select="jumpToHeaderPages"
-            >
-              <el-menu-item index="1">首页</el-menu-item>
-              <el-menu-item index="3">关于</el-menu-item>
-              <el-menu-item index="4">赞助</el-menu-item>
-              <el-submenu index="5">
-                <template slot="title">留言</template>
-                <el-menu-item index="5-1">提交建议</el-menu-item>
-                <el-menu-item index="5-2">提交问题</el-menu-item>
-                <el-menu-item index="5-3">联系作者</el-menu-item>
-              </el-submenu>
-              <el-submenu index="2">
-                <template slot="title">工具</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-              </el-submenu>
-              <el-menu-item index="6">友情链接</el-menu-item>
-              <el-menu-item index="7">{{
-                $route.query.articleType ? $route.query.articleType : ""
-              }}</el-menu-item>
-            </el-menu>
-          </div>
-          <div class="header-search">
-            <el-input v-model="input" placeholder="请输入内容"></el-input>
-            <el-button
-              class="btn btn-primary btn-shine"
-              @click="$router.push('/postArticle')"
-              >我要投稿</el-button
-            >
+        <div class="header-top">
+          <div class="header-top-main">
+            <div class="header-menu">
+              <el-menu
+                :default-active="activeIndex"
+                class="el-menu-demo"
+                mode="horizontal"
+                @select="jumpToHeaderPages"
+                :key="menuKey"
+              >
+                <el-menu-item index="1">首页</el-menu-item>
+                <el-menu-item index="3">关于</el-menu-item>
+                <el-menu-item index="4">赞助</el-menu-item>
+                <el-submenu index="5">
+                  <template slot="title">留言</template>
+                  <el-menu-item index="5-1">提交建议</el-menu-item>
+                  <el-menu-item index="5-2">提交问题</el-menu-item>
+                  <el-menu-item index="5-3">联系作者</el-menu-item>
+                </el-submenu>
+                <el-submenu index="2">
+                  <template slot="title">工具</template>
+                  <el-menu-item index="2-1">选项1</el-menu-item>
+                </el-submenu>
+                <el-menu-item index="6">友情链接</el-menu-item>
+                <el-menu-item index="7">{{ headerSeventhName }}</el-menu-item>
+              </el-menu>
+            </div>
+            <div class="header-search">
+              <el-input v-model="input" placeholder="请输入内容"></el-input>
+              <el-button
+                class="btn btn-primary btn-shine"
+                @click="contribution()"
+                >我要投稿</el-button
+              >
+            </div>
           </div>
         </div>
         <div
@@ -58,7 +59,7 @@
                 class="header-title"
                 :class="{
                   'header-title-opacity': isAddTechnologyClass,
-                  'reveal': isAddTechnologyClass,
+                  reveal: isAddTechnologyClass,
                 }"
                 @click="jumpToHome()"
               >
@@ -102,6 +103,7 @@ export default {
         { path: "/adminPage", name: "管理页面" },
       ]),
       input: "",
+      menuKey:"",
       technologyList: [
         { id: 1, name: "js" },
         { id: 2, name: "ts" },
@@ -117,23 +119,34 @@ export default {
     headerTitle() {
       return this.$store.state.headerTitle;
     },
+    headerSeventhName() {
+      return this.$store.state.headerSeventhName;
+    },
   },
   watch: {
     $route: {
       handler: function (item) {
-        if (item.query.articleType) {
-          this.activeIndex = "7";
+        if (item.path === "/articleDetail" && item.query.articleType) {
+          this.$store.commit("changeHeaderSeventhName", {
+            seventhName: item.query.articleType,
+          });
         }
       },
       deep: true,
-      // 立即执行
       immediate: true,
     },
-    technologyState(){
-      if(!this.technologyState) {
-        this.titleEffect()
+    // 监听 选中的 id 如果 不是 7 那就 进行 清空选项
+    activeIndex() {
+      if (this.activeIndex !== "7") {
+        this.$store.commit("changeHeaderSeventhName", { seventhName: "" });
       }
-    }
+    },
+    // 监听导航第七个 如果有内容就 进行设置 id 这样就不需要 在单独设置
+    headerSeventhName() {
+      if (this.headerSeventhName) {
+        this.activeIndex = "7";
+      }
+    },
   },
   mounted() {
     this.addWindowScroll();
@@ -170,7 +183,9 @@ export default {
       this.$router.push(path);
       this.activeIndex = activeIndex;
     },
-    titleEffect() { 
+    contribution() {
+      this.$router.push("/postArticle");
+      this.$store.commit("changeHeaderSeventhName", { seventhName: "投稿" });
     },
   },
 };
@@ -185,18 +200,19 @@ export default {
     box-shadow: 0.1rem 0 0.1rem #ccc;
   }
   .wd-header {
-    width: 12rem;
-    margin: auto;
     height: 100%;
-    .header-main {
-      display: flex;
-      justify-content: space-between;
+    .header-top {
+      border-bottom: 1px solid #ccc;
       width: 100%;
-      height: 0.6rem;
+      .header-top-main {
+        display: flex;
+        justify-content: space-between;
+        width: @view-width;
+        margin: auto;
+      }
       .el-menu.el-menu--horizontal {
         border-bottom: none;
       }
-
       .header-search {
         line-height: 0.6rem;
         display: flex;
@@ -255,7 +271,9 @@ export default {
         }
       }
     }
+
     .header-scrolltop {
+      width: 100%;
       position: fixed;
       top: -0.6rem;
       left: 0;
@@ -264,14 +282,16 @@ export default {
       background: @backage-color;
     }
     .content-scrolltop {
-      width: 12rem !important;
+      width: @view-width !important;
       margin: auto;
     }
+
     .header-technology {
       width: 100%;
       height: 0.5rem;
-      z-index: 9999;
       .header-content {
+        width: @view-width;
+        margin: auto;
         height: 100%;
         display: flex;
         justify-content: space-between;
@@ -308,7 +328,7 @@ export default {
   }
   main {
     background: @backage-color;
-    width: 12rem;
+    width: @view-width;
     margin: auto;
     margin-top: 0.1rem;
     box-shadow: @box-shadow;

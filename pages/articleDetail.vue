@@ -69,8 +69,8 @@ export default {
 
 <style lang="less" scoped>
 .wd-article-detail {
-  width: 12rem;
-  height: 12rem;
+  width: @view-width;
+  height: @view-width;
   .article-detail-header {
     height: 1rem;
     width: 100%;

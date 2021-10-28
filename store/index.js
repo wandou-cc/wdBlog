@@ -1,6 +1,7 @@
 export const state = () => ({
     technologyState: true,
-    headerTitle: ""
+    headerTitle: "",
+    headerSeventhName:""
 })
 
 export const mutations = {
@@ -18,5 +19,10 @@ export const mutations = {
     changeTechnologyTitle(state,query) {
         let {headerTitle} = query
         state.headerTitle = headerTitle
+    },
+    // 导航头 部分最后一个 显示名称
+    changeHeaderSeventhName(state,query) {
+        let { seventhName } = query
+        state.headerSeventhName = seventhName
     }
 }
