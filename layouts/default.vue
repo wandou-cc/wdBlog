@@ -152,14 +152,12 @@ export default {
     },
 
     headerHoverIndex() {
-      console.log(this.headerHoverIndex);
       this.$store.commit("changeHeaderHoverIndex", {
         activeIndex: this.headerHoverIndex,
       });
     },
   },
   mounted() {
-    
     this.getStore();
     this.addEvent();
   },
@@ -202,12 +200,11 @@ export default {
       };
     },
     jumpToHome() {
+      window.history.pushState({ hoverId: "1", name: "" }, "");
       this.$router.replace("/");
       this.headerHoverIndex = "1";
     },
-    jumpToPath(value) {
-      console.log(value);
-    },
+
     jumpToHeaderPages(activeIndex) {
       let path;
       let title;
