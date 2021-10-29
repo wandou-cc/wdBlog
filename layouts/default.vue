@@ -132,7 +132,6 @@ export default {
           this.$store.commit("changeHeaderSeventhName", {
             seventhName: item.query.articleType,
           });
-          return;
         }
       },
       deep: true,
@@ -157,6 +156,14 @@ export default {
       });
     },
   },
+
+  async asyncData({ $axios }) {
+    console.log(123)
+    const ip = await $axios.$post("/articlelist",{size:10,page:1});
+    console.log(ip)
+    return { ip };
+  },
+
   mounted() {
     this.getStore();
     this.addEvent();
@@ -176,7 +183,7 @@ export default {
       }
     },
     addEvent() {
-      window.history.pushState({ hoverId: '1', name: "" }, '');
+      window.history.pushState({ hoverId: "1", name: "" }, "");
       window.onscroll = () => {
         if (document.scrollingElement.scrollTop > 200) {
           this.isAddTechnologyClass = true;
@@ -204,7 +211,6 @@ export default {
       this.$router.replace("/");
       this.headerHoverIndex = "1";
     },
-
     jumpToHeaderPages(activeIndex) {
       let path;
       let title;
