@@ -1,6 +1,7 @@
 export default function ({ store, redirect, req, router, app: { $axios } }) {
     // 数据访问前缀
-    $axios.defaults.baseURL = 'http://localhost:24082/api';
+    $axios.defaults.baseURL = 'http://localhost:24081/api';
+    // $axios.defaults.imgUrl = 'http://localhost:24082/img'
     // if (process.server) {
     //     // 获取服务端的token
     //     var token = getCookie.getcookiesInServer(req).token;

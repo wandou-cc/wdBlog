@@ -24,25 +24,28 @@ export default {
     { src: "@/plugins/vue-mavon-editor", ssr: false },
     '@/plugins/axios',
     '@plugins/publicFunction.js',
-    '@plugins/router.js'
+    '@plugins/router.js',
+    '@components/globalRC.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   modules: [
     '@nuxtjs/axios',
+    '@gauseen/nuxt-proxy',
     '@nuxtjs/style-resources'
   ],
   styleResources: {
     less: './assets/styles/global.less'
   },
 
-  axios:{
-    proxy:true
-  },
-  proxy: {
-    "/api": "http://localhost:24082/api"
-  },
-
+  // axios:{
+  //   proxy:true,
+  //   prefix: '/api',
+  //   credentials: true
+  // },
+  proxyTable: {
+    '/api': { target: 'http://localhost:24081/api', ws: false, pathRewrite: { '^/api': '' } }
+},
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [],
 
@@ -50,6 +53,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [/^element-ui/]
+    transpile: [/^element-ui/],
+    vendor: ['axios']
   }
 };

@@ -157,12 +157,12 @@ export default {
     },
   },
 
-  async asyncData({ $axios }) {
-    console.log(123)
-    const ip = await $axios.$post("/articlelist",{size:10,page:1});
-    console.log(ip)
-    return { ip };
-  },
+  // async asyncData({ $axios }) {
+  //   console.log(123)
+  //   const ip = await $axios.$post("/articlelist",{size:10,page:1});
+  //   console.log(ip)
+  //   return { ip };
+  // },
 
   mounted() {
     this.getStore();

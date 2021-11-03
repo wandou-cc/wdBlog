@@ -66,16 +66,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="文章封面">
-          <el-upload
-            class="avatar-uploader"
-            action="#"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
+          <upload-img action="/api/addCover" @getImgInfo='getImgInfo'></upload-img>
         </el-form-item>
         <el-form-item label="文章简介">
           <el-input
@@ -110,7 +101,9 @@
 </template>
 
 <script>
+import uploadImg from '../components/uploadImg.vue';
 export default {
+  components: { uploadImg },
   data() {
     return {
       markdownOption: Object.freeze({
@@ -173,7 +166,7 @@ export default {
         reprintSource: "",
         articleIntroduction: "",
         articleImg: "",
-        isComment:0
+        isComment: 0,
       },
       isShowRelease: false,
       imageUrl: "",
@@ -191,31 +184,17 @@ export default {
     },
 
     determineRelease() {
-      console.log(this.submitForm)
+      console.log(this.submitForm);
     },
     changeStateTitle() {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "添加博客" });
     },
     isShowOuter() {
       this.isShowRelease = !this.isShowRelease;
-      // this.articleIntroduction = this.submitForm.content.slice(0,99);
     },
-
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
+    getImgInfo(imgid){
+      this.submitForm.articleImg = imgid;
+    }
   },
 };
 </script>
@@ -247,31 +226,6 @@ export default {
         border-bottom: 1px solid #ccc !important;
       }
     }
-  }
-
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 0.06rem;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 0.28rem;
-    color: #8c939d;
-    width: 2rem;
-    height: 1.4rem;
-    line-height: 1.4rem;
-    text-align: center;
-  }
-
-  .avatar {
-    width: 2rem;
-    height: 1.4rem;
-    display: block;
   }
 }
 </style>
