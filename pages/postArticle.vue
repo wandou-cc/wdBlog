@@ -1,10 +1,10 @@
 <template>
   <div class="wd-postEditor">
-    <el-form :model="submitForm">
-      <el-form-item>
+    <el-form :model="submitForm" ref="submitFormOne">
+      <el-form-item prop="articleTitle">
         <div class="article-title">
           <el-input
-            v-model="submitForm.title"
+            v-model="submitForm.articleTitle"
             placeholder="请输入标题"
           ></el-input>
           <el-button class="buttton" type="primary" @click="isShowOuter"
@@ -12,22 +12,21 @@
           >
         </div>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="articleContent">
         <no-ssr>
           <mavon-editor
             :toolbars="markdownOption"
-            v-model="submitForm.content"
             style="width: 100%; height: calc(100vh - 2.5rem)"
             :ishljs="true"
+            ref="mavonEditor"
             @change="updateDoc"
-            @save="saveDoc"
           />
         </no-ssr>
       </el-form-item>
     </el-form>
     <div class="create-now" v-if="isShowRelease">
-      <el-form :model="submitForm" label-width="80px">
-        <el-form-item label="文章分类">
+      <el-form :model="submitForm" label-width="80px" ref="submitFormTwo">
+        <el-form-item label="文章分类" prop="cifId">
           <el-select
             v-model="submitForm.cifId"
             clearable
@@ -42,7 +41,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="来源">
+        <el-form-item label="来源" prop="isOriginal">
           <el-select
             v-model="submitForm.isOriginal"
             placeholder="请选择文章来源"
@@ -58,7 +57,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="来源地址" v-if="submitForm.isOriginal === 1">
+        <el-form-item label="来源地址" v-if="submitForm.isOriginal === 1" prop="reprintSource">
           <el-input
             clearable
             v-model="submitForm.reprintSource"
@@ -66,9 +65,12 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="文章封面">
-          <upload-img action="/api/addCover" @getImgInfo='getImgInfo'></upload-img>
+          <upload-img
+            action="/api/addCover"
+            @getImgInfo="getImgInfo"
+          ></upload-img>
         </el-form-item>
-        <el-form-item label="文章简介">
+        <el-form-item label="文章简介" prop="articleIntroduction">
           <el-input
             clearable
             type="textarea"
@@ -76,7 +78,7 @@
             placeholder="请输入文章简介"
           ></el-input>
         </el-form-item>
-        <el-form-item label="开启评论">
+        <el-form-item label="开启评论" prop="isComment">
           <el-select
             v-model="submitForm.isComment"
             placeholder="是否开启评论功能"
@@ -93,7 +95,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="determineRelease">确定发布</el-button>
-          <el-button @click="isShowRelease = false">取消/关闭</el-button>
+          <el-button @click="cancel">取消/关闭</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -101,9 +103,7 @@
 </template>
 
 <script>
-import uploadImg from '../components/uploadImg.vue';
 export default {
-  components: { uploadImg },
   data() {
     return {
       markdownOption: Object.freeze({
@@ -149,51 +149,90 @@ export default {
       ]),
       commentList: Object.freeze([
         {
-          value: 0,
+          value: 1,
           label: "开启",
         },
         {
-          value: 1,
+          value: 0,
           label: "关闭",
         },
       ]),
       classificationList: [],
       submitForm: {
-        title: "",
-        content: "",
+        articleTitle: "",
+        articleContent: "",
         cifId: "",
         isOriginal: "",
         reprintSource: "",
         articleIntroduction: "",
         articleImg: "",
-        isComment: 0,
+        isComment: 1,
+        userId:'bf926190-1d0b-11ec-a5f7-2d648d641c9a'
       },
       isShowRelease: false,
       imageUrl: "",
     };
   },
+  watch: {
+    isShowRelease() {
+      this.isShowRelease && this.getTypeInfo();
+    },
+  },
   mounted() {
     this.changeStateTitle();
   },
+  // async asyncData({ $axios }) {
+  //   const classificationList = await $axios.$post("/getCif");
+  //   console.log(classificationList);
+  //   return { classificationList: classificationList.list };
+  // },
   methods: {
-    updateDoc(e) {
-      console.log(e);
-    },
-    saveDoc(e) {
-      console.log(e);
-    },
-
-    determineRelease() {
-      console.log(this.submitForm);
-    },
     changeStateTitle() {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "添加博客" });
+    },
+    determineRelease() {
+      this.$axios.post("/api/addArticle", this.submitForm).then((res) => {
+        if (res.data.code === 200) {
+          this.$notify({
+            message: "添加成功",
+            position: "bottom-right",
+            type: 'success'
+          });
+          this.isShowRelease = false
+        }else {
+          this.$notify({
+            message: res.data.msg,
+            position: "bottom-right",
+            type: 'error'
+          });
+        }
+        this.reset()
+      });
+    },
+    cancel(){
+      this.isShowRelease = false;
+      this.reset();
+    },
+    updateDoc(value,html) {
+      this.submitForm.articleContent = html;
     },
     isShowOuter() {
       this.isShowRelease = !this.isShowRelease;
     },
-    getImgInfo(imgid){
+    getImgInfo(imgid) {
       this.submitForm.articleImg = imgid;
+    },
+    getTypeInfo() {
+      this.$axios.post("/api/getCif").then((res) => {
+        if (res.data.code === 200) {
+          this.classificationList = res.data.list;
+        }
+      });
+    },
+    reset(){
+      this.$refs.submitFormOne.resetFields()
+      this.$refs.submitFormTwo.resetFields()
+      this.submitForm.articleImg = ''
     }
   },
 };

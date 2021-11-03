@@ -16,13 +16,13 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["@static/element-ui/index.css", {src:"@assets/styles/global.less",lang:'less'}],
+  css: ["@static/element-ui/index.css", { src: "@assets/styles/global.less", lang: 'less' }],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     "@/plugins/element-ui",
     { src: "@/plugins/vue-mavon-editor", ssr: false },
-    '@/plugins/axios',
+    { src: "@/plugins/axios", ssr: false },
     '@plugins/publicFunction.js',
     '@plugins/router.js',
     '@components/globalRC.js'
@@ -38,14 +38,27 @@ export default {
     less: './assets/styles/global.less'
   },
 
-  // axios:{
-  //   proxy:true,
-  //   prefix: '/api',
-  //   credentials: true
+  axios: {
+    proxy: true,
+    baseURL: 'http://192.168.108.216:24084/api',
+  },
+  proxy: {
+    '/api': { target: 'http://192.168.108.216:24084/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
+  },
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.BROWSER_BASE_URL
+    }
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.BASE_URL
+    }
+  },
+  // proxyTable: {
+  //   '/api': { target: 'http://192.168.108.216:24083/api', ws: false, pathRewrite: { '^/api': '' } }
   // },
-  proxyTable: {
-    '/api': { target: 'http://localhost:24081/api', ws: false, pathRewrite: { '^/api': '' } }
-},
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [],
 
