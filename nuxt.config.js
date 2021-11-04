@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "BLOG",
+    title: "豌豆博客",
     htmlAttrs: {
       lang: "en"
     },
@@ -40,10 +40,10 @@ export default {
 
   axios: {
     proxy: true,
-    baseURL: 'http://192.168.108.216:24084/api',
+    baseURL: 'http://192.168.108.216:24080/api',
   },
   proxy: {
-    '/api': { target: 'http://192.168.108.216:24084/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
+    '/api': { target: 'http://192.168.108.216:24080/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
   },
   publicRuntimeConfig: {
     axios: {

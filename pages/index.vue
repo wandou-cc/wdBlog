@@ -70,7 +70,8 @@
                   </p>
                 </div>
               </div>
-            </li> <li class="article-item" @click="jumpToDetail(1)">
+            </li>
+            <li class="article-item" @click="jumpToDetail(1)">
               <div class="article-item-img"></div>
               <div class="article-item-content">
                 <h3 class="article-title">标题</h3>
@@ -115,7 +116,8 @@
                   </p>
                 </div>
               </div>
-            </li> <li class="article-item" @click="jumpToDetail(1)">
+            </li>
+            <li class="article-item" @click="jumpToDetail(1)">
               <div class="article-item-img"></div>
               <div class="article-item-content">
                 <h3 class="article-title">标题</h3>
@@ -160,7 +162,8 @@
                   </p>
                 </div>
               </div>
-            </li> <li class="article-item" @click="jumpToDetail(1)">
+            </li>
+            <li class="article-item" @click="jumpToDetail(1)">
               <div class="article-item-img"></div>
               <div class="article-item-content">
                 <h3 class="article-title">标题</h3>
@@ -205,7 +208,8 @@
                   </p>
                 </div>
               </div>
-            </li> <li class="article-item" @click="jumpToDetail(1)">
+            </li>
+            <li class="article-item" @click="jumpToDetail(1)">
               <div class="article-item-img"></div>
               <div class="article-item-content">
                 <h3 class="article-title">标题</h3>
@@ -250,7 +254,8 @@
                   </p>
                 </div>
               </div>
-            </li> <li class="article-item" @click="jumpToDetail(1)">
+            </li>
+            <li class="article-item" @click="jumpToDetail(1)">
               <div class="article-item-img"></div>
               <div class="article-item-content">
                 <h3 class="article-title">标题</h3>
@@ -319,27 +324,39 @@ export default {
         { id: 4, value: "收藏最多" },
       ],
       activeName: "",
+      submitForm:{
+        page:1,
+        size:10
+      }
     };
   },
-  mounted(){
-    this.changeStateTitle()
+  mounted() {
+    this.changeStateTitle();
+  },
+  created() {
+    this.getArticleList();
   },
   methods: {
     handleClick(e) {
       console.log(e);
     },
-    changeStateTitle(){
-      this.$store.commit('changeTechnologyTitle',{headerTitle:'WD博客'})
+    getArticleList() {
+      this.$axios.post("/api/articlelist", this.submitForm).then((res) => {
+        console.log(res.data)
+      });
+    },
+    changeStateTitle() {
+      this.$store.commit("changeTechnologyTitle", { headerTitle: "WD博客" });
     },
     jumpToDetail(articleId) {
       this.$router.replace({
         path: "/articleDetail",
         query: {
           articleId,
-          articleType:"vue"
+          articleType: "vue",
         },
       });
-      window.history.pushState({ hoverId: "7", name: "vue" }, '');
+      window.history.pushState({ hoverId: "7", name: "vue" }, "");
     },
   },
 };

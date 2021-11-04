@@ -194,7 +194,7 @@ export default {
       this.$axios.post("/api/addArticle", this.submitForm).then((res) => {
         if (res.data.code === 200) {
           this.$notify({
-            message: "添加成功",
+            message: "添加成功,请等待审核",
             position: "bottom-right",
             type: 'success'
           });
