@@ -16,7 +16,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["@static/element-ui/index.css", { src: "@assets/styles/global.less", lang: 'less' }],
+  css: ["@static/element-ui/index.css", 
+        { src: "@assets/styles/global.less", lang: 'less' },
+        "@static/github-markdown.min.css"
+      ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -41,10 +44,10 @@ export default {
 
   axios: {
     proxy: true,
-    baseURL: 'http://192.168.108.216:24080/api',
+    baseURL: 'http://192.168.108.216:24081/api',
   },
   proxy: {
-    '/api': { target: 'http://192.168.108.216:24080/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
+    '/api': { target: 'http://192.168.108.216:24081/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
   },
   publicRuntimeConfig: {
     axios: {

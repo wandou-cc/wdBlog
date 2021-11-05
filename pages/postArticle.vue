@@ -230,9 +230,10 @@ export default {
       });
     },
     reset(){
-      this.$refs.submitFormOne.resetFields()
-      this.$refs.submitFormTwo.resetFields()
-      this.submitForm.articleImg = ''
+      this.$refs.submitFormOne.resetFields();
+      this.$refs.submitFormTwo.resetFields();
+      this.submitForm.articleImg = '';
+      this.submitForm.articleContent = '';
     }
   },
 };
