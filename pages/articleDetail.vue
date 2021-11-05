@@ -2,68 +2,89 @@
   <div class="wd-article-detail">
     <div class="article-detail-header">
       <div class="header-info">
-        <h1>vue面试</h1>
+        <h1>{{ articleDetail.articleTitle }}</h1>
         <div class="header-info-data">
           <p>
             <i class="icon-time"></i>
-            <span>2021-10-12</span>
+            <span>{{
+              formatTime("YYYY-mm-dd HH:MM:SS", articleDetail.createTime)
+            }}</span>
           </p>
           <!-- 查看 -->
           <p>
             <i class="icon-check"></i>
-            <span>10000</span>
+            <span>{{ articleDetail.articleCheck }}</span>
           </p>
           <!-- 热度 -->
           <p>
             <i class="icon-hot"></i>
-            <span>10000</span>
+            <span>{{
+              formatHot(
+                articleDetail.articleCheck,
+                  articleDetail.articleLike,
+                  articleDetail.articleCollect
+              )
+            }}</span>
           </p>
           <!-- 喜欢 -->
           <p>
             <i class="icon-like"></i>
-            <span>10000</span>
+            <span>{{articleDetail.articleLike}}</span>
           </p>
           <!-- 点赞 -->
-          <p>
+          <!-- <p>
             <i class="icon-great"></i>
             <span>1000</span>
-          </p>
+          </p> -->
           <!-- 收藏 -->
           <p>
             <i class="icon-collect"></i>
-            <span>11000</span>
+            <span>{{articleDetail.articleCollect}}</span>
           </p>
           <!-- 类型 -->
           <p>
             <i class="icon-type"></i>
-            <span>vue</span>
+            <span>{{articleDetail.cifName}}</span>
           </p>
         </div>
       </div>
       <div class="header-outer">
         <p class="outer-motto">何处惹尘埃</p>
-        <p class="outer-author">豌豆</p>
+        <p class="outer-author">{{articleDetail.userName}}</p>
       </div>
+    </div>
+    <div class="article-detail-main">
+      <div v-html="articleDetail.articleContent"></div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
-  data(){
+  data() {
     return {
-      
-    }
+      articleDetail: {},
+    };
   },
-  mounted(){
-    this.changeStateTitle()
+  mounted() {
+    this.changeStateTitle();
+    this.getarticleDetail();
   },
-  methods:{
-    changeStateTitle(){
-      this.$store.commit('changeTechnologyTitle',{headerTitle:'标题标题'})
-    }
-  }
+  methods: {
+    changeStateTitle() {
+      this.$store.commit("changeTechnologyTitle", { headerTitle: "标题标题" });
+    },
+    getarticleDetail() {
+      this.$axios
+        .post("/api/detailArticle", { articleId: this.$route.query.articleId })
+        .then((res) => {
+          let data = res.data;
+          if (data.code === 200) {
+            this.articleDetail = data.list[0];
+          }
+        });
+    },
+  },
 };
 </script>
 

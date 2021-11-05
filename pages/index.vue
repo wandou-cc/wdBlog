@@ -15,8 +15,9 @@
       </div>
       <div class="main-article">
         <div class="nav-list">
-          <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tabs v-model="submitForm.orders" type="card">
             <el-tab-pane
+              :name="item.id"
               v-for="item in navList"
               :key="item.id"
               :label="item.value"
@@ -25,278 +26,59 @@
         </div>
         <div class="article-list">
           <ul>
-            <li class="article-item" @click="jumpToDetail(1)">
+            <li
+              class="article-item"
+              @click="jumpToDetail(item.articleId,item.cifName)"
+              v-for="item in articleList"
+              :key="item.id"
+            >
               <div class="article-item-img"></div>
               <div class="article-item-content">
-                <h3 class="article-title">标题</h3>
-                <p class="article-desc">
-                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
-                </p>
+                <h3 class="article-title">{{ item.articleTitle }}</h3>
+                <p class="article-desc">{{ item.articleIntroduction }}</p>
                 <div class="article-foot">
                   <!-- 时间 -->
                   <p>
                     <i class="icon-time"></i>
-                    <span>2021-10-12</span>
+                    <span>{{
+                      formatTime("YYYY-mm-dd HH:MM:SS", item.createTime)
+                    }}</span>
                   </p>
                   <!-- 查看 -->
                   <p>
                     <i class="icon-check"></i>
-                    <span>10000</span>
+                    <span>{{ item.articleCheck }}</span>
                   </p>
                   <!-- 热度 -->
                   <p>
                     <i class="icon-hot"></i>
-                    <span>10000</span>
+                    <span>{{
+                      formatHot(
+                        item.articleCheck,
+                          item.articleLike,
+                          item.articleCollect
+                      )
+                    }}</span>
                   </p>
                   <!-- 喜欢 -->
                   <p>
                     <i class="icon-like"></i>
-                    <span>10000</span>
+                    <span>{{ item.articleLike }}</span>
                   </p>
                   <!-- 点赞 -->
-                  <p>
+                  <!-- <p>
                     <i class="icon-great"></i>
                     <span>1000</span>
-                  </p>
+                  </p> -->
                   <!-- 收藏 -->
                   <p>
                     <i class="icon-collect"></i>
-                    <span>11000</span>
+                    <span>{{ item.articleCollect }}</span>
                   </p>
                   <!-- 类型 -->
                   <p>
                     <i class="icon-type"></i>
-                    <span>vue</span>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="article-item" @click="jumpToDetail(1)">
-              <div class="article-item-img"></div>
-              <div class="article-item-content">
-                <h3 class="article-title">标题</h3>
-                <p class="article-desc">
-                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
-                </p>
-                <div class="article-foot">
-                  <!-- 时间 -->
-                  <p>
-                    <i class="icon-time"></i>
-                    <span>2021-10-12</span>
-                  </p>
-                  <!-- 查看 -->
-                  <p>
-                    <i class="icon-check"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 热度 -->
-                  <p>
-                    <i class="icon-hot"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 喜欢 -->
-                  <p>
-                    <i class="icon-like"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 点赞 -->
-                  <p>
-                    <i class="icon-great"></i>
-                    <span>1000</span>
-                  </p>
-                  <!-- 收藏 -->
-                  <p>
-                    <i class="icon-collect"></i>
-                    <span>11000</span>
-                  </p>
-                  <!-- 类型 -->
-                  <p>
-                    <i class="icon-type"></i>
-                    <span>vue</span>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="article-item" @click="jumpToDetail(1)">
-              <div class="article-item-img"></div>
-              <div class="article-item-content">
-                <h3 class="article-title">标题</h3>
-                <p class="article-desc">
-                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
-                </p>
-                <div class="article-foot">
-                  <!-- 时间 -->
-                  <p>
-                    <i class="icon-time"></i>
-                    <span>2021-10-12</span>
-                  </p>
-                  <!-- 查看 -->
-                  <p>
-                    <i class="icon-check"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 热度 -->
-                  <p>
-                    <i class="icon-hot"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 喜欢 -->
-                  <p>
-                    <i class="icon-like"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 点赞 -->
-                  <p>
-                    <i class="icon-great"></i>
-                    <span>1000</span>
-                  </p>
-                  <!-- 收藏 -->
-                  <p>
-                    <i class="icon-collect"></i>
-                    <span>11000</span>
-                  </p>
-                  <!-- 类型 -->
-                  <p>
-                    <i class="icon-type"></i>
-                    <span>vue</span>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="article-item" @click="jumpToDetail(1)">
-              <div class="article-item-img"></div>
-              <div class="article-item-content">
-                <h3 class="article-title">标题</h3>
-                <p class="article-desc">
-                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
-                </p>
-                <div class="article-foot">
-                  <!-- 时间 -->
-                  <p>
-                    <i class="icon-time"></i>
-                    <span>2021-10-12</span>
-                  </p>
-                  <!-- 查看 -->
-                  <p>
-                    <i class="icon-check"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 热度 -->
-                  <p>
-                    <i class="icon-hot"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 喜欢 -->
-                  <p>
-                    <i class="icon-like"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 点赞 -->
-                  <p>
-                    <i class="icon-great"></i>
-                    <span>1000</span>
-                  </p>
-                  <!-- 收藏 -->
-                  <p>
-                    <i class="icon-collect"></i>
-                    <span>11000</span>
-                  </p>
-                  <!-- 类型 -->
-                  <p>
-                    <i class="icon-type"></i>
-                    <span>vue</span>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="article-item" @click="jumpToDetail(1)">
-              <div class="article-item-img"></div>
-              <div class="article-item-content">
-                <h3 class="article-title">标题</h3>
-                <p class="article-desc">
-                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
-                </p>
-                <div class="article-foot">
-                  <!-- 时间 -->
-                  <p>
-                    <i class="icon-time"></i>
-                    <span>2021-10-12</span>
-                  </p>
-                  <!-- 查看 -->
-                  <p>
-                    <i class="icon-check"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 热度 -->
-                  <p>
-                    <i class="icon-hot"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 喜欢 -->
-                  <p>
-                    <i class="icon-like"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 点赞 -->
-                  <p>
-                    <i class="icon-great"></i>
-                    <span>1000</span>
-                  </p>
-                  <!-- 收藏 -->
-                  <p>
-                    <i class="icon-collect"></i>
-                    <span>11000</span>
-                  </p>
-                  <!-- 类型 -->
-                  <p>
-                    <i class="icon-type"></i>
-                    <span>vue</span>
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="article-item" @click="jumpToDetail(1)">
-              <div class="article-item-img"></div>
-              <div class="article-item-content">
-                <h3 class="article-title">标题</h3>
-                <p class="article-desc">
-                  这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介这里是简介
-                </p>
-                <div class="article-foot">
-                  <!-- 时间 -->
-                  <p>
-                    <i class="icon-time"></i>
-                    <span>2021-10-12</span>
-                  </p>
-                  <!-- 查看 -->
-                  <p>
-                    <i class="icon-check"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 热度 -->
-                  <p>
-                    <i class="icon-hot"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 喜欢 -->
-                  <p>
-                    <i class="icon-like"></i>
-                    <span>10000</span>
-                  </p>
-                  <!-- 点赞 -->
-                  <p>
-                    <i class="icon-great"></i>
-                    <span>1000</span>
-                  </p>
-                  <!-- 收藏 -->
-                  <p>
-                    <i class="icon-collect"></i>
-                    <span>11000</span>
-                  </p>
-                  <!-- 类型 -->
-                  <p>
-                    <i class="icon-type"></i>
-                    <span>vue</span>
+                    <span>{{ item.cifName }}</span>
                   </p>
                 </div>
               </div>
@@ -318,42 +100,69 @@ export default {
     return {
       hotList: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
       navList: [
-        { id: 1, value: "最新文章" },
-        { id: 2, value: "最热文章" },
-        { id: 3, value: "点赞最多" },
-        { id: 4, value: "收藏最多" },
+        { id: "createTime", value: "最新文章" },
+        { id: "articleCheck", value: "阅读最多" },
+        { id: "articleLike", value: "点赞最多" },
+        { id: "articleCollect", value: "收藏最多" },
       ],
-      activeName: "",
-      submitForm:{
-        page:1,
-        size:10
-      }
+      articleList: [],
+      submitForm: {
+        page: 1,
+        size: 10,
+        orders: "createTime",
+      },
     };
   },
   mounted() {
     this.changeStateTitle();
   },
-  created() {
-    this.getArticleList();
+  watch: {
+    submitFormNew: {
+      handler() {
+        this.getArticleList();
+      },
+    },
+    deep: true,
+  },
+  computed: {
+    submitFormNew() {
+      return JSON.parse(JSON.stringify(this.submitForm));
+    },
+  },
+  asyncData({ $axios }) {
+    let submitForm = {
+        page: 1,
+        size: 1000,
+        orders: "createTime",
+      }
+    $axios.post("/api/articlelist", submitForm).then((res) => {
+      let data = res.data;
+      if (data.code === 200) {
+        return {articleList: data.list};
+      }
+    });
+  },
+  mounted(){
+    this.getArticleList()
   },
   methods: {
-    handleClick(e) {
-      console.log(e);
-    },
     getArticleList() {
-      this.$axios.post("/api/articlelist", this.submitForm).then((res) => {
-        console.log(res.data)
+      this.$axios.post("/api/articlelist", this.submitFormNew).then((res) => {
+        let data = res.data;
+        if (data.code === 200) {
+          this.articleList = data.list;
+        }
       });
     },
     changeStateTitle() {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "WD博客" });
     },
-    jumpToDetail(articleId) {
+    jumpToDetail(articleId,articleType) {
       this.$router.replace({
         path: "/articleDetail",
         query: {
           articleId,
-          articleType: "vue",
+          articleType
         },
       });
       window.history.pushState({ hoverId: "7", name: "vue" }, "");

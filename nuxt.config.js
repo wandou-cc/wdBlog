@@ -25,7 +25,8 @@ export default {
     { src: "@/plugins/axios", ssr: false },
     '@plugins/publicFunction.js',
     '@plugins/router.js',
-    '@components/globalRC.js'
+    '@components/globalRC.js',
+    '@plugins/filter.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
