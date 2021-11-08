@@ -21,40 +21,50 @@
             <span>{{
               formatHot(
                 articleDetail.articleCheck,
-                  articleDetail.articleLike,
-                  articleDetail.articleCollect
+                articleDetail.articleLike,
+                articleDetail.articleCollect
               )
             }}</span>
           </p>
           <!-- 喜欢 -->
           <p>
             <i class="icon-like"></i>
-            <span>{{articleDetail.articleLike}}</span>
+            <span>{{ articleDetail.articleLike }}</span>
           </p>
-          <!-- 点赞 -->
-          <!-- <p>
-            <i class="icon-great"></i>
-            <span>1000</span>
-          </p> -->
           <!-- 收藏 -->
           <p>
             <i class="icon-collect"></i>
-            <span>{{articleDetail.articleCollect}}</span>
+            <span>{{ articleDetail.articleCollect }}</span>
           </p>
           <!-- 类型 -->
           <p>
             <i class="icon-type"></i>
-            <span>{{articleDetail.cifName}}</span>
+            <span>{{ articleDetail.cifName }}</span>
           </p>
         </div>
       </div>
       <div class="header-outer">
         <p class="outer-motto">何处惹尘埃</p>
-        <p class="outer-author">{{articleDetail.userName}}</p>
+        <p class="outer-author">{{ articleDetail.userName }}</p>
       </div>
     </div>
-    <div class="article-detail-main">
+    <div class="article-detail-main markdown-body">
       <div v-html="articleDetail.articleContent"></div>
+    </div>
+    <div class="article-detail-foot">
+      <!-- 点赞 -->
+      <div class="foot-like">
+        <i class="like" v-if="!isLike" @click="clickLike(1)"></i>
+        <i class="like-hover" v-else @click="clickLike(2)"></i>
+      </div>
+      <!-- 版权说明 -->
+      <div>
+        <p>作者：{{articleDetail.userName}}</p>
+        <p> 作品采用： 《 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 》许可协议授权</p>
+      </div>
+
+      <!-- 评论 -->
+      <div></div>
     </div>
   </div>
 </template>
@@ -64,6 +74,8 @@ export default {
   data() {
     return {
       articleDetail: {},
+      isLike:false,
+      state:""
     };
   },
   mounted() {
@@ -74,23 +86,59 @@ export default {
     changeStateTitle() {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "标题标题" });
     },
+    // 获取详情
     getarticleDetail() {
       this.$axios
-        .post("/api/detailArticle", { articleId: this.$route.query.articleId })
+        .post("/api/detailArticle", {
+          articleId: this.$route.query.articleId,
+          userid: "bf926190-1d0b-11ec-a5f7-2d648d641c9a",
+        })
         .then((res) => {
           let data = res.data;
           if (data.code === 200) {
             this.articleDetail = data.list[0];
+            this.isLike = this.articleDetail.isLike
           }
         });
     },
+    // 添加喜欢/取消喜欢
+    clickLike(value) {
+      let form = {
+        userId: "bf926190-1d0b-11ec-a5f7-2d648d641c9a",
+        articleId: this.articleDetail.articleId,
+      };
+      let api;
+      if (value === 1) {
+        api = "/api/addMyLike";
+        this.state = 'add'
+      } else {
+        api = "/api/cancelMyLike";
+        this.state = 'reduce'
+      }
+      this.$axios.post(api, form).then((res) => {
+        if (res.data.code === 200) {
+          this.$notify({
+            message: res.data.list,
+            position: "bottom-right",
+            type: "success",
+          });
+        } else {
+          this.$notify({
+            message: res.data.list,
+            position: "bottom-right",
+            type: "error",
+          });
+        }
+
+        this.getarticleDetail();
+      });
+    }
   },
 };
 </script>
 
 <style lang="less" scoped>
 .wd-article-detail {
-  height: @view-width;
   .article-detail-header {
     height: 1rem;
     width: 100%;
@@ -131,6 +179,28 @@ export default {
       padding: 0.1rem;
       border-left: 1px solid rgb(121, 121, 121);
       text-align: center;
+    }
+  }
+  .article-detail-foot {
+     border-top: 1px solid #ccc;
+    .foot-like {
+      height: 0.4rem;
+      width: 100%;
+      i {
+        display: inline-block;
+        margin: 0 auto;
+        display: block;
+        width: 0.4rem;
+        height: 0.4rem;
+      }
+      .like {
+        background: url("../assets/icon/like.svg");
+        background-size: 100% 100%;
+      }
+      .like-hover {
+        background: url("../assets/icon/like-hover.svg");
+        background-size: 100% 100%;
+      }
     }
   }
 }
