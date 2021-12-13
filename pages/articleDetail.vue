@@ -58,7 +58,7 @@
         <i class="like-hover" v-else @click="clickLike(2)"></i>
       </div>
       <!-- 版权说明 -->
-      <div>
+      <div class="foot-copyright">
         <p>作者：{{articleDetail.userName}}</p>
         <p> 作品采用： 《 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 》许可协议授权</p>
       </div>
@@ -129,7 +129,6 @@ export default {
             type: "error",
           });
         }
-
         this.getarticleDetail();
       });
     }
@@ -201,6 +200,11 @@ export default {
         background: url("../assets/icon/like-hover.svg");
         background-size: 100% 100%;
       }
+    }
+    .foot-copyright {
+      border: 1px solid tomato;
+      margin-top: 0.1rem;
+      font-size: 0.14rem;
     }
   }
 }
