@@ -44,10 +44,10 @@ export default {
 
   axios: {
     proxy: true,
-    baseURL: 'http://192.168.108.216:24081/api',
+    baseURL: 'http://localhost:24082/api',
   },
   proxy: {
-    '/api': { target: 'http://192.168.108.216:24081/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
+    '/api': { target: 'http://localhost:24082/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
   },
   publicRuntimeConfig: {
     axios: {

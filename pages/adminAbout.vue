@@ -1,5 +1,5 @@
 <template>
     <div>
-        qweqwewe
+        关于
     </div>
 </template>

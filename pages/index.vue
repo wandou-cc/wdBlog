@@ -113,9 +113,6 @@ export default {
       },
     };
   },
-  mounted() {
-    this.changeStateTitle();
-  },
   watch: {
     submitFormNew: {
       handler() {
@@ -129,21 +126,23 @@ export default {
       return JSON.parse(JSON.stringify(this.submitForm));
     },
   },
-  asyncData({ $axios }) {
-    let submitForm = {
-        page: 1,
-        size: 1000,
-        orders: "createTime",
-      }
-    $axios.post("/api/articlelist", submitForm).then((res) => {
-      let data = res.data;
-      if (data.code === 200) {
-        return {articleList: data.list};
-      }
-    });
-  },
+  // asyncData({ $axios }) {
+  //   let submitForm = {
+  //       page: 1,
+  //       size: 1000,
+  //       orders: "createTime",
+  //     }
+  //   $axios.post("/api/articlelist", submitForm).then((res) => {
+  //     let data = res.data;
+  //     if (data.code === 200) {
+  //       console.log(data.list)
+  //       return {articleList: data.list};
+  //     }
+  //   });
+  // },
   mounted(){
     this.getArticleList()
+    this.changeStateTitle();
   },
   methods: {
     getArticleList() {

@@ -2,7 +2,7 @@ export const state = () => ({
     technologyState: true,
     headerTitle: "",
     headerSeventhName: "",
-    activeIndex:"2"
+    activeIndex:""
 })
 
 export const mutations = {

@@ -9,11 +9,11 @@
                 :default-active="headerHoverIndex"
                 class="el-menu-demo"
                 mode="horizontal"
-                @select="jumpToHeaderPages"
+                router
               >
-                <el-menu-item index="1">首页</el-menu-item>
-                <el-menu-item index="3">关于</el-menu-item>
-                <el-menu-item index="4">赞助</el-menu-item>
+                <el-menu-item index="/">首页</el-menu-item>
+                <el-menu-item index="/adminAbout">关于</el-menu-item>
+                <el-menu-item index="/userSponsor">赞助</el-menu-item>
                 <el-submenu index="5">
                   <template slot="title">留言</template>
                   <el-menu-item index="5-1">提交建议</el-menu-item>
@@ -24,8 +24,10 @@
                   <template slot="title">工具</template>
                   <el-menu-item index="2-1">选项1</el-menu-item>
                 </el-submenu>
-                <el-menu-item index="6">友情链接</el-menu-item>
-                <el-menu-item index="7">{{ headerSeventhName }}</el-menu-item>
+                <el-menu-item index="/friendsLinks">友情链接</el-menu-item>
+                <el-menu-item index="7" disabled v-if="headerSeventhName">{{
+                  headerSeventhName
+                }}</el-menu-item>
               </el-menu>
             </div>
             <div class="header-search">
@@ -60,7 +62,7 @@
                   'header-title-opacity': isAddTechnologyClass,
                   reveal: isAddTechnologyClass,
                 }"
-                @click="jumpToHome()"
+                @click="$router.push('/')"
               >
                 {{ headerTitle }}
               </h1>
@@ -106,9 +108,8 @@ export default {
         { id: 1, name: "js" },
         { id: 2, name: "ts" },
       ],
-
       isAddTechnologyClass: false,
-      headerHoverIndex: "1",
+      headerHoverIndex: "/",
     };
   },
   computed: {
@@ -121,33 +122,25 @@ export default {
     headerSeventhName() {
       return this.$store.state.headerSeventhName;
     },
-    activeIndex() {
-      return this.$store.state.activeIndex;
-    },
   },
   watch: {
     $route: {
       handler: function (item) {
-        if (item.path === "/articleDetail" && item.query.articleType) {
+        if (this.headerSeventhName) {
+          this.$store.commit("changeHeaderSeventhName", {
+            seventhName: "",
+          });
+        }
+        this.headerHoverIndex = item.path;
+        if (item.path === "/articleDetail" || item.path === "/postArticle") {
           this.$store.commit("changeHeaderSeventhName", {
             seventhName: item.query.articleType,
           });
+          this.headerHoverIndex = "7";
         }
       },
       deep: true,
       immediate: true,
-    },
-
-    activeIndex() {
-      if (this.activeIndex !== "7") {
-        this.$store.commit("changeHeaderSeventhName", { seventhName: "" });
-      }
-    },
-    // 监听导航第七个 如果有内容就 进行设置 id 这样就不需要 在单独设置
-    headerSeventhName() {
-      if (this.headerSeventhName) {
-        this.headerHoverIndex = "7";
-      }
     },
 
     headerHoverIndex() {
@@ -171,11 +164,9 @@ export default {
             JSON.parse(sessionStorage.getItem("store"))
           )
         );
-        this.headerHoverIndex = this.activeIndex;
       }
     },
     addEvent() {
-      window.history.pushState({ hoverId: "1", name: "" }, "");
       window.onscroll = () => {
         if (document.scrollingElement.scrollTop > 200) {
           this.isAddTechnologyClass = true;
@@ -191,40 +182,18 @@ export default {
         sessionStorage.setItem("store", JSON.stringify(this.$store.state));
       });
       // 监听历史记录 实现返回前进 功能
-      window.onpopstate = (event) => {
-        this.headerHoverIndex = event.state.hoverId;
-        this.$store.commit("changeHeaderSeventhName", {
-          seventhName: event.state.name,
-        });
-      };
-    },
-    jumpToHome() {
-      window.history.pushState({ hoverId: "1", name: "" }, "");
-      this.$router.replace("/");
-      this.headerHoverIndex = "1";
-    },
-    jumpToHeaderPages(activeIndex) {
-      let path;
-      let title;
-      switch (activeIndex) {
-        case "1":
-          path = "/";
-          title = "wdblog";
-          break;
-        case "3":
-          title = "关于";
-          path = "/adminAbout";
-          break;
-      }
-      window.history.pushState({ hoverId: activeIndex, name: "" }, title);
-      this.$router.replace(path);
-      this.headerHoverIndex = activeIndex;
+      // window.onpopstate = (event) => {
+      //   this.$store.commit("changeHeaderSeventhName", {
+      //     seventhName: event.state.name,
+      //   });
+      // };
     },
     // 投稿
     contribution() {
-      window.history.pushState({ hoverId: "7", name: "投稿" }, "");
-      this.$store.commit("changeHeaderSeventhName", { seventhName: "投稿" });
-      this.$router.replace("/postArticle");
+      this.$router.push({
+        path: "/postArticle",
+        query: { articleType: "投稿" },
+      });
     },
   },
 };
