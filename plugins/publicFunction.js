@@ -1,13 +1,6 @@
 import Vue from 'vue'
 const tools = {
     install(Vue) {
-        Vue.prototype.changeHeaderSeventName = (path, name, query = {}) => {
-            Vue.$router.push({
-                path,
-                query
-            });
-            this.$store.commit("changeHeaderSeventhName", { seventhName: name });
-        }
         Vue.prototype.formatTime = (fmt, date) => {
             date = new Date(+date)
             let ret;
@@ -28,7 +21,7 @@ const tools = {
             return fmt;
         }
         Vue.prototype.formatHot = (articleCheck,articleLike,articleCollect) => {
-            return (articleCheck + articleLike + articleCollect) * 6
+            return (articleCheck + articleLike + articleCollect) * 3
         }
     }
 }

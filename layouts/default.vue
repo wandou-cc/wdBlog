@@ -11,6 +11,7 @@
                 mode="horizontal"
                 router
               >
+                <!-- @select='select' -->
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/adminAbout">关于</el-menu-item>
                 <el-menu-item index="/userSponsor">赞助</el-menu-item>
@@ -34,7 +35,9 @@
               <el-input v-model="input" placeholder="请输入内容"></el-input>
               <el-button
                 class="btn btn-primary btn-shine"
-                @click="contribution()"
+                @click="
+                  changeHeaderName({ path: '/postArticle', name: '投稿' })
+                "
                 >我要投稿</el-button
               >
             </div>
@@ -67,19 +70,22 @@
                 {{ headerTitle }}
               </h1>
             </div>
-            <el-dropdown class="my-account">
-              <el-button type="primary"
-                >我的账户<i class="el-icon-arrow-down el-icon--right"></i
-              ></el-button>
+            <el-dropdown class="my-account" @command="(item)=>{$router.push(item.path)}">
+              <el-button type="primary">
+                我的账户
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
               <el-dropdown-menu slot="dropdown">
                 <div class="account-avatar">
                   <p></p>
                 </div>
-                <el-dropdown-item v-for="item in accountList" :key="item.id"
-                  ><span @click="$router.push(item.path)">{{
-                    item.name
-                  }}</span></el-dropdown-item
+                <el-dropdown-item
+                  v-for="item in accountList"
+                  :key="item.id"
+                  :command="item"
                 >
+                  <span>{{ item.name }}</span>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -95,12 +101,11 @@
 export default {
   data() {
     return {
+      lastUrl: Object.freeze(["/postArticle", "/userLogin", "/myArticle"]),
       accountList: Object.freeze([
         { path: "/userLogin", name: "注册/登录" },
         { path: "/postArticle", name: "发布文章" },
-        { path: "/myArticle", name: "我的发布" },
-        { path: "/myLike?type=collect", name: "我的收藏" },
-        { path: "/myLike?type=like", name: "我的喜欢" },
+        { path: "/myArticle", name: "我的数据" },
         { path: "/adminPage", name: "管理页面" },
       ]),
       input: "",
@@ -124,19 +129,25 @@ export default {
     },
   },
   watch: {
+    // 根据路由来确定展示那个
     $route: {
       handler: function (item) {
-        if (this.headerSeventhName) {
-          this.$store.commit("changeHeaderSeventhName", {
-            seventhName: "",
-          });
-        }
         this.headerHoverIndex = item.path;
-        if (item.path === "/articleDetail" || item.path === "/postArticle") {
+        let result = this.accountList.filter((_item) => {
+          return _item.path === item.path;
+        });
+        if (result.length !== 0 || item.path === "/articleDetail") {
           this.$store.commit("changeHeaderSeventhName", {
-            seventhName: item.query.articleType,
+            seventhName:
+              (result.length !== 0 && result[0].name) || item.query.articleType,
           });
           this.headerHoverIndex = "7";
+        } else {
+          if (this.headerSeventhName) {
+            this.$store.commit("changeHeaderSeventhName", {
+              seventhName: "",
+            });
+          }
         }
       },
       deep: true,
@@ -187,14 +198,7 @@ export default {
       //     seventhName: event.state.name,
       //   });
       // };
-    },
-    // 投稿
-    contribution() {
-      this.$router.push({
-        path: "/postArticle",
-        query: { articleType: "投稿" },
-      });
-    },
+    }
   },
 };
 </script>
@@ -220,6 +224,10 @@ export default {
       }
       .el-menu.el-menu--horizontal {
         border-bottom: none;
+        .el-menu-item.is-disabled {
+          cursor: pointer !important;
+          opacity: 1 !important;
+        }
       }
       .header-search {
         line-height: 0.6rem;

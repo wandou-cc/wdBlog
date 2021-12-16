@@ -28,8 +28,7 @@ export default {
     { src: "@/plugins/axios", ssr: false },
     '@plugins/publicFunction.js',
     '@plugins/router.js',
-    '@components/globalRC.js',
-    '@plugins/filter.js'
+    '@components/globalRC.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -42,9 +41,10 @@ export default {
     less: './assets/styles/global.less'
   },
 
+
   axios: {
     proxy: true,
-    baseURL: 'http://localhost:24082/api',
+    baseURL: 'http://localhost:24082/api'
   },
   proxy: {
     '/api': { target: 'http://localhost:24082/api', pathRewrite: {'^/api': ''}, changeOrigin: true }
@@ -60,17 +60,11 @@ export default {
       baseURL: process.env.BASE_URL
     }
   },
-  // proxyTable: {
-  //   '/api': { target: 'http://192.168.108.216:24083/api', ws: false, pathRewrite: { '^/api': '' } }
-  // },
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+
   buildModules: [],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/^element-ui/],
     vendor: ['axios']
   }
 };
+

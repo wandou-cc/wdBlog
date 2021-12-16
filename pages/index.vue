@@ -10,7 +10,7 @@
       </div>
       <div class="main-hot">
         <ul>
-          <li v-for="item in hotList" :key="item.id"></li>
+          <li v-for="item in hotList" :key="item.articleId"></li>
         </ul>
       </div>
       <div class="main-article">
@@ -28,11 +28,13 @@
           <ul>
             <li
               class="article-item"
-              @click="jumpToDetail(item.articleId,item.cifName)"
+              @click="jumpToDetail(item.articleId, item.cifName)"
               v-for="item in articleList"
               :key="item.id"
             >
-              <div class="article-item-img"></div>
+              <div class="article-item-img">
+                <img src="" alt="" />
+              </div>
               <div class="article-item-content">
                 <h3 class="article-title">{{ item.articleTitle }}</h3>
                 <p class="article-desc">{{ item.articleIntroduction }}</p>
@@ -55,8 +57,8 @@
                     <span>{{
                       formatHot(
                         item.articleCheck,
-                          item.articleLike,
-                          item.articleCollect
+                        item.articleLike,
+                        item.articleCollect
                       )
                     }}</span>
                   </p>
@@ -98,14 +100,15 @@
 export default {
   data() {
     return {
-      hotList: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
+      articleList:[],
+      hotList: [],
       navList: [
         { id: "createTime", value: "最新文章" },
         { id: "articleCheck", value: "阅读最多" },
         { id: "articleLike", value: "点赞最多" },
         { id: "articleCollect", value: "收藏最多" },
       ],
-      articleList: [],
+
       submitForm: {
         page: 1,
         size: 10,
@@ -126,30 +129,50 @@ export default {
       return JSON.parse(JSON.stringify(this.submitForm));
     },
   },
-  // asyncData({ $axios }) {
-  //   let submitForm = {
+  /*
+    天坑
+     1.需要写全域名
+     2.不能使用this.$router.push() 会报 跨域 错误 使用 window.location.href='/XXX'
+     3.created中请求报错 404 
+  */ 
+  // async asyncData({ $axios }) {
+  //   try {
+  //     let submitForm = {
   //       page: 1,
-  //       size: 1000,
+  //       size: 10,
   //       orders: "createTime",
+  //     };
+  //     let resault = await $axios.post(`http://localhost:24082/api/articlelist`, submitForm);
+  //     if (resault.data.code === 200) {
+  //       return { articleList: resault.data.list };
   //     }
-  //   $axios.post("/api/articlelist", submitForm).then((res) => {
-  //     let data = res.data;
-  //     if (data.code === 200) {
-  //       console.log(data.list)
-  //       return {articleList: data.list};
-  //     }
-  //   });
+  //   } catch (error) {
+      
+  //   }
   // },
-  mounted(){
+  mounted() {
     this.getArticleList()
     this.changeStateTitle();
+    this.random();
   },
   methods: {
+    random() {
+      this.$axios.post("/api/randomList").then((res) => {
+        let data = res.data;
+        if (data.code === 200) {
+          this.hotList = data.list;
+        } else {
+          this.$message.error("hot出错");
+        }
+      });
+    },
     getArticleList() {
       this.$axios.post("/api/articlelist", this.submitFormNew).then((res) => {
         let data = res.data;
         if (data.code === 200) {
           this.articleList = data.list;
+        } else {
+          this.$message.error("列表出错");
         }
       });
     },
@@ -164,7 +187,6 @@ export default {
           articleType
         },
       });
-      window.history.pushState({ hoverId: "7", name: "vue" }, "");
     },
   },
 };
