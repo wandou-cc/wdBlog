@@ -2,15 +2,17 @@
   <div class="wd">
     <div class="wd-view-main">
       <div class="main-swiper">
-        <el-carousel :autoplay="false">
-          <el-carousel-item v-for="item in 6" :key="item">
-            <h3 class="medium" @click="bannerDetail(item)">{{ item }}</h3>
+        <el-carousel >
+          <el-carousel-item v-for="item in bannerList" :key="item.bannerId">
+            <img :src="imgUrl + item.imgUrl" :alt="item.title" style="width:100%;height:100%">
           </el-carousel-item>
         </el-carousel>
       </div>
       <div class="main-hot">
         <ul>
-          <li v-for="item in hotList" :key="item.articleId"></li>
+          <li v-for="item in hotList" :key="item.articleId">
+            <img :src="imgUrl + item.imgUrl" alt="" />
+          </li>
         </ul>
       </div>
       <div class="main-article">
@@ -33,7 +35,7 @@
               :key="item.id"
             >
               <div class="article-item-img">
-                <img src="" alt="" />
+                <img :src="imgUrl + item.imgUrl" alt="" />
               </div>
               <div class="article-item-content">
                 <h3 class="article-title">{{ item.articleTitle }}</h3>
@@ -97,11 +99,14 @@
 </template>
 
 <script>
+import { imgBaseUrl } from "~/plugins/imgUrl";
 export default {
   data() {
     return {
-      articleList:[],
+      imgUrl: "",
+      articleList: [],
       hotList: [],
+      bannerList:[],
       navList: [
         { id: "createTime", value: "最新文章" },
         { id: "articleCheck", value: "阅读最多" },
@@ -134,7 +139,7 @@ export default {
      1.需要写全域名
      2.不能使用this.$router.push() 会报 跨域 错误 使用 window.location.href='/XXX'
      3.created中请求报错 404 
-  */ 
+  */
   // async asyncData({ $axios }) {
   //   try {
   //     let submitForm = {
@@ -147,15 +152,25 @@ export default {
   //       return { articleList: resault.data.list };
   //     }
   //   } catch (error) {
-      
+
   //   }
   // },
   mounted() {
-    this.getArticleList()
+    this.imgUrl = imgBaseUrl;
+    this.getArticleList();
     this.changeStateTitle();
     this.random();
+    this.getBanner()
   },
   methods: {
+    getBanner() {
+      this.$axios.post("/api/banner").then((res)=>{
+        let data = res.data
+        if(data.code === 200) {
+          this.bannerList = data.list
+        }
+      })
+    },
     random() {
       this.$axios.post("/api/randomList").then((res) => {
         let data = res.data;
@@ -179,12 +194,12 @@ export default {
     changeStateTitle() {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "WD博客" });
     },
-    jumpToDetail(articleId,articleType) {
+    jumpToDetail(articleId, articleType) {
       this.$router.replace({
         path: "/articleDetail",
         query: {
           articleId,
-          articleType
+          articleType,
         },
       });
     },
@@ -201,24 +216,26 @@ export default {
     .main-swiper {
       height: 3rem;
       width: 100%;
-      border: 1px solid orange;
       margin-bottom: 0.1rem;
     }
     .main-hot {
       height: 2rem;
       width: 100%;
-      border: 1px solid green;
       ul {
         height: 100%;
         display: flex;
         justify-content: space-between;
         li {
+          border: 1px solid rgb(32, 32, 32);
           height: 100%;
           width: calc(100% / 4);
           margin-right: 0.05rem;
-          border: 1px solid tomato;
           &:nth-last-child(1) {
             margin-right: 0;
+          }
+          img {
+            width: 100%;
+            height: 100%;
           }
         }
       }
@@ -239,6 +256,10 @@ export default {
           height: 100%;
           width: 2rem;
           border: 1px solid royalblue;
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
         .article-item-content {
           flex: 1;
