@@ -18,6 +18,7 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@static/element-ui/index.css", 
         { src: "@assets/styles/global.less", lang: 'less' },
+        "@assets/styles/animate.css",
         "@static/github-markdown.min.css"
       ],
 

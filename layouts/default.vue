@@ -11,7 +11,6 @@
                 mode="horizontal"
                 router
               >
-                <!-- @select='select' -->
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/adminAbout">关于</el-menu-item>
                 <el-menu-item index="/userSponsor">赞助</el-menu-item>
@@ -35,11 +34,10 @@
               <el-input v-model="input" placeholder="请输入内容"></el-input>
               <el-button
                 class="btn btn-primary btn-shine"
-                @click="
-                  changeHeaderName({ path: '/postArticle', name: '投稿' })
-                "
-                >我要投稿</el-button
+                @click="contribute()"
               >
+                我要投稿
+              </el-button>
             </div>
           </div>
         </div>
@@ -70,7 +68,14 @@
                 {{ headerTitle }}
               </h1>
             </div>
-            <el-dropdown class="my-account" @command="(item)=>{$router.push(item.path)}">
+            <el-dropdown
+              class="my-account"
+              @command="
+                (item) => {
+                  $router.push(item.path);
+                }
+              "
+            >
               <el-button type="primary">
                 我的账户
                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -198,7 +203,10 @@ export default {
       //     seventhName: event.state.name,
       //   });
       // };
-    }
+    },
+    contribute() {
+      this.$router.push({ path: "/postArticle" });
+    },
   },
 };
 </script>
@@ -305,6 +313,7 @@ export default {
     .header-technology {
       width: 100%;
       height: 0.5rem;
+      z-index: 9999;
       .header-content {
         width: @view-width;
         margin: auto;

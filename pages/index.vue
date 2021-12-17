@@ -2,16 +2,32 @@
   <div class="wd">
     <div class="wd-view-main">
       <div class="main-swiper">
-        <el-carousel >
+        <el-carousel>
           <el-carousel-item v-for="item in bannerList" :key="item.bannerId">
-            <img :src="imgUrl + item.imgUrl" :alt="item.title" style="width:100%;height:100%">
+            <img
+              :src="imgUrl + item.imgUrl"
+              :alt="item.title"
+              style="width: 100%; height: 100%"
+            />
           </el-carousel-item>
         </el-carousel>
       </div>
       <div class="main-hot">
         <ul>
-          <li v-for="item in hotList" :key="item.articleId">
-            <img :src="imgUrl + item.imgUrl" alt="" />
+          <li
+            v-for="(item, index) in hotList"
+            :key="item.articleId"
+            class="main-hot-item"
+            @mouseenter="hotOpacity = index"
+            @mouseleave="hotOpacity = ''"
+          >
+            <img :src="imgUrl + item.imgUrl" />
+            <transition name="fade">
+              <KongmingLight
+                v-if="hotOpacity === index"
+                :title="item.articleTitle"
+              />
+            </transition>
           </li>
         </ul>
       </div>
@@ -35,7 +51,7 @@
               :key="item.id"
             >
               <div class="article-item-img">
-                <img :src="imgUrl + item.imgUrl" alt="" />
+                <img :src="imgUrl + item.imgUrl" />
               </div>
               <div class="article-item-content">
                 <h3 class="article-title">{{ item.articleTitle }}</h3>
@@ -103,10 +119,11 @@ import { imgBaseUrl } from "~/plugins/imgUrl";
 export default {
   data() {
     return {
+      hotOpacity: "",
       imgUrl: "",
       articleList: [],
       hotList: [],
-      bannerList:[],
+      bannerList: [],
       navList: [
         { id: "createTime", value: "最新文章" },
         { id: "articleCheck", value: "阅读最多" },
@@ -160,16 +177,16 @@ export default {
     this.getArticleList();
     this.changeStateTitle();
     this.random();
-    this.getBanner()
+    this.getBanner();
   },
   methods: {
     getBanner() {
-      this.$axios.post("/api/banner").then((res)=>{
-        let data = res.data
-        if(data.code === 200) {
-          this.bannerList = data.list
+      this.$axios.post("/api/banner").then((res) => {
+        let data = res.data;
+        if (data.code === 200) {
+          this.bannerList = data.list;
         }
-      })
+      });
     },
     random() {
       this.$axios.post("/api/randomList").then((res) => {
@@ -208,6 +225,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
+@default-theme-color: #00b3b0;
 .wd {
   display: flex;
   .wd-view-main {
@@ -226,7 +244,7 @@ export default {
         display: flex;
         justify-content: space-between;
         li {
-          border: 1px solid rgb(32, 32, 32);
+          position: relative;
           height: 100%;
           width: calc(100% / 4);
           margin-right: 0.05rem;
@@ -237,25 +255,68 @@ export default {
             width: 100%;
             height: 100%;
           }
+          .fade-enter-active,
+          .fade-leave-active {
+            transition: opacity 0.5s;
+          }
+          .fade-enter,
+          .fade-leave-to {
+            opacity: 0;
+          }
         }
       }
     }
     .main-article {
       margin-top: 0.1rem;
       width: 100%;
-      border: 1px solid teal;
       .article-item {
         display: flex;
         justify-content: flex-start;
         padding: 0.1rem;
         height: 1.5rem;
-        border: 1px solid red;
         margin-bottom: 0.1rem;
         cursor: pointer;
+        &:hover {
+          .article-item-img {
+            &::before,
+            &::after {
+              width: 99%;
+              height: 98%;
+              opacity: 1;
+              transition: width 0.2s linear, height 0.15s 0.2s linear,
+                opacity 0s;
+            }
+          }
+          box-shadow: 0px 0px 0.04rem #666;
+          border-radius: 0.1rem;
+        }
         .article-item-img {
+          position: relative;
           height: 100%;
           width: 2rem;
-          border: 1px solid royalblue;
+          padding: 0.08rem;
+          &::before,
+          &::after {
+            position: absolute;
+            content: "";
+            width: 0%;
+            height: 0%;
+            opacity: 0;
+            transition: width 0.2s 0.15s linear, height 0.15s linear,
+              opacity 0s 0.35s;
+          }
+          &::before {
+            top: 0;
+            left: 0;
+            border-left: 2px solid @default-theme-color;
+            border-top: 2px solid @default-theme-color;
+          }
+          &::after {
+            bottom: 0;
+            right: 0;
+            border-right: 2px solid @default-theme-color;
+            border-bottom: 2px solid @default-theme-color;
+          }
           img {
             width: 100%;
             height: 100%;
@@ -266,7 +327,6 @@ export default {
           padding: 0.08rem;
           margin-left: 0.1rem;
           height: 100%;
-          border: 1px solid tomato;
           .article-desc {
             margin: 0.08rem;
           }
