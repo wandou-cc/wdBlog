@@ -1,17 +1,26 @@
 <template>
   <div class="wd">
-    <div class="wd-view-main">
+    <div class="wd-view-main main-content main-color">
+      <!-- 轮播图 -->
       <div class="main-swiper">
-        <el-carousel>
-          <el-carousel-item v-for="item in bannerList" :key="item.bannerId">
-            <img
-              :src="imgUrl + item.imgUrl"
-              :alt="item.title"
-              style="width: 100%; height: 100%"
-            />
-          </el-carousel-item>
-        </el-carousel>
+        <el-skeleton class="main-skeleton100" :loading="loadingSwiper" animated>
+          <template slot="template">
+            <el-skeleton-item variant="image" class="main-skeleton100" />
+          </template>
+          <template>
+            <el-carousel>
+              <el-carousel-item v-for="item in bannerList" :key="item.bannerId">
+                <img
+                  :src="imgUrl + item.imgUrl"
+                  :alt="item.title"
+                  style="width: 100%; height: 100%"
+                />
+              </el-carousel-item>
+            </el-carousel>
+          </template>
+        </el-skeleton>
       </div>
+      <!-- 随机四个 -->
       <div class="main-hot">
         <ul>
           <li
@@ -21,16 +30,26 @@
             @mouseenter="hotOpacity = index"
             @mouseleave="hotOpacity = ''"
           >
-            <img :src="imgUrl + item.imgUrl" />
-            <transition name="fade">
-              <KongmingLight
-                v-if="hotOpacity === index"
-                :title="item.articleTitle"
-              />
-            </transition>
+            <el-skeleton
+              class="main-skeleton100"
+              :loading="loadingHot"
+              animated
+            >
+              <template slot="template">
+                <el-skeleton-item variant="image" class="main-skeleton100" />
+              </template>
+              <img :src="imgUrl + item.imgUrl" />
+              <transition name="fade">
+                <KongmingLight
+                  v-if="hotOpacity === index"
+                  :title="item.articleTitle"
+                />
+              </transition>
+            </el-skeleton>
           </li>
         </ul>
       </div>
+      <!-- 文章列表 -->
       <div class="main-article">
         <div class="nav-list">
           <el-tabs v-model="submitForm.orders" type="card">
@@ -50,65 +69,47 @@
               v-for="item in articleList"
               :key="item.id"
             >
-              <div class="article-item-img">
-                <img :src="imgUrl + item.imgUrl" />
-              </div>
-              <div class="article-item-content">
-                <h3 class="article-title">{{ item.articleTitle }}</h3>
-                <p class="article-desc">{{ item.articleIntroduction }}</p>
-                <div class="article-foot">
-                  <!-- 时间 -->
-                  <p>
-                    <i class="icon-time"></i>
-                    <span>{{
-                      formatTime("YYYY-mm-dd HH:MM:SS", item.createTime)
-                    }}</span>
-                  </p>
-                  <!-- 查看 -->
-                  <p>
-                    <i class="icon-check"></i>
-                    <span>{{ item.articleCheck }}</span>
-                  </p>
-                  <!-- 热度 -->
-                  <p>
-                    <i class="icon-hot"></i>
-                    <span>{{
-                      formatHot(
-                        item.articleCheck,
-                        item.articleLike,
-                        item.articleCollect
-                      )
-                    }}</span>
-                  </p>
-                  <!-- 喜欢 -->
-                  <p>
-                    <i class="icon-like"></i>
-                    <span>{{ item.articleLike }}</span>
-                  </p>
-                  <!-- 点赞 -->
-                  <!-- <p>
-                    <i class="icon-great"></i>
-                    <span>1000</span>
-                  </p> -->
-                  <!-- 收藏 -->
-                  <p>
-                    <i class="icon-collect"></i>
-                    <span>{{ item.articleCollect }}</span>
-                  </p>
-                  <!-- 类型 -->
-                  <p>
-                    <i class="icon-type"></i>
-                    <span>{{ item.cifName }}</span>
-                  </p>
-                </div>
-              </div>
+              <el-skeleton
+                :loading="loadingArticle"
+                animated
+                :throttle="300"
+                class="main-skeleton100 skeleton-article"
+              >
+                <template slot="template">
+                  <div class="article-item-img">
+                    <el-skeleton-item variant="image" style="height: 100%" />
+                  </div>
+                  <div class="article-item-content">
+                    <el-skeleton-item
+                      variant="h3"
+                      style="height: 0.3rem; width: 30%"
+                    />
+                    <el-skeleton-item variant="text" style="height: 0.3rem" />
+                    <el-skeleton-item
+                      variant="text"
+                      style="height: 0.3rem; width: 60%"
+                    />
+                  </div>
+                </template>
+
+                <template>
+                  <div class="article-item-img">
+                    <img :src="imgUrl + item.imgUrl" />
+                  </div>
+                  <div class="article-item-content">
+                    <h3 class="article-title">{{ item.articleTitle }}</h3>
+                    <p class="article-desc">{{ item.articleIntroduction }}</p>
+                    <articleInfo :articleDetail="item" />
+                  </div>
+                </template>
+              </el-skeleton>
             </li>
           </ul>
         </div>
       </div>
     </div>
 
-    <div class="wd-view-aside">
+    <div class="wd-view-aside main-aside main-color">
       <aside></aside>
     </div>
   </div>
@@ -119,10 +120,13 @@ import { imgBaseUrl } from "~/plugins/imgUrl";
 export default {
   data() {
     return {
+      loadingSwiper: true,
+      loadingHot: true,
+      loadingArticle: true,
       hotOpacity: "",
       imgUrl: "",
-      articleList: [],
-      hotList: [],
+      articleList: [{}, {}, {}, {}],
+      hotList: [{}, {}, {}],
       bannerList: [],
       navList: [
         { id: "createTime", value: "最新文章" },
@@ -139,18 +143,15 @@ export default {
     };
   },
   watch: {
-    submitFormNew: {
+    submitForm: {
       handler() {
+        this.loadingArticle = true;
         this.getArticleList();
       },
-    },
-    deep: true,
-  },
-  computed: {
-    submitFormNew() {
-      return JSON.parse(JSON.stringify(this.submitForm));
+      deep: true,
     },
   },
+
   /*
     天坑
      1.需要写全域名
@@ -180,11 +181,15 @@ export default {
     this.getBanner();
   },
   methods: {
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
     getBanner() {
       this.$axios.post("/api/banner").then((res) => {
         let data = res.data;
         if (data.code === 200) {
           this.bannerList = data.list;
+          this.loadingSwiper = false;
         }
       });
     },
@@ -193,16 +198,18 @@ export default {
         let data = res.data;
         if (data.code === 200) {
           this.hotList = data.list;
+          this.loadingHot = false;
         } else {
           this.$message.error("hot出错");
         }
       });
     },
     getArticleList() {
-      this.$axios.post("/api/articlelist", this.submitFormNew).then((res) => {
+      this.$axios.post("/api/articlelist", this.submitForm).then((res) => {
         let data = res.data;
         if (data.code === 200) {
           this.articleList = data.list;
+          this.loadingArticle = false;
         } else {
           this.$message.error("列表出错");
         }
@@ -227,10 +234,10 @@ export default {
 <style scoped lang='less'>
 @default-theme-color: #00b3b0;
 .wd {
-  display: flex;
+  position: relative;
+  // display: flex;
   .wd-view-main {
-    flex: 1;
-    margin-right: 0.1rem;
+    // flex: 1;
     .main-swiper {
       height: 3rem;
       width: 100%;
@@ -243,10 +250,10 @@ export default {
         height: 100%;
         display: flex;
         justify-content: space-between;
-        li {
+        .main-hot-item {
           position: relative;
           height: 100%;
-          width: calc(100% / 4);
+          width: calc(100% / 3);
           margin-right: 0.05rem;
           &:nth-last-child(1) {
             margin-right: 0;
@@ -269,9 +276,7 @@ export default {
     .main-article {
       margin-top: 0.1rem;
       width: 100%;
-      .article-item {
-        display: flex;
-        justify-content: flex-start;
+      /deep/.article-item {
         padding: 0.1rem;
         height: 1.5rem;
         margin-bottom: 0.1rem;
@@ -324,40 +329,28 @@ export default {
         }
         .article-item-content {
           flex: 1;
-          padding: 0.08rem;
-          margin-left: 0.1rem;
           height: 100%;
+          margin: 0.08rem 0.2rem !important;
+
           .article-desc {
-            margin: 0.08rem;
+            margin: 0.12rem 0rem;
           }
-          .article-foot {
-            display: flex;
-            margin: 0.08rem;
-            p {
-              height: 0.2rem;
-              // width: 0.8rem;
-              margin-right: 0.08rem;
-              text-align: left;
-              i {
-                display: inline-block;
-                width: 0.2rem;
-                height: 100%;
-                background-size: 100%;
-                background-position: center center;
-                vertical-align: middle;
-              }
-              span {
-                font-size: 0.1rem;
-              }
-            }
-          }
+        }
+      }
+      /deep/.skeleton-article {
+        display: flex;
+        justify-content: flex-start;
+        .el-skeleton {
+          display: flex;
         }
       }
     }
   }
   .wd-view-aside {
-    width: 3rem;
-    border: 1px solid palevioletred;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 5rem;
   }
 }
 </style>

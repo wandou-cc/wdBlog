@@ -17,14 +17,14 @@
 #__nuxt {
   font-size: 0.16rem;
   min-height: 100vh;
-  background: @main-backage-color;
+  background: #f4f5f5;
 }
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
   width: 0.08rem;
   height: 0.08rem;
-  background-color: @scrollbar-backageColor;
+  background-color: rgba(144,147,153,.3);
 }
 
 /*定义滚动条轨道 内阴影+圆角*/
@@ -35,7 +35,7 @@
 /*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
   border-radius: 0.05rem;
-  background-color: @scrollbar-thumb-color;
+  background-color: rgba(144,147,153,.3);
 }
 
 * {
@@ -82,4 +82,29 @@ textarea {
 }
 textarea {
   resize: none;
+}
+
+// 骨架屏样式
+.main-skeleton100 {
+  width:100%;
+  height:100%
+}
+
+.el-skeleton {
+  height: 100%;
+}
+
+.main-content {
+  width: 9.3rem;
+}
+
+.main-aside {
+  width: 2.5rem;
+}
+
+.main-color {
+  border-radius: 0.08rem;
+  padding: 0.2rem;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0.02rem #909399;
 }

@@ -4,10 +4,15 @@ import {
     Menu, MenuItem, Submenu, Row, Col, Card,
     Pagination, Form, FormItem, Input, Tag, Notification,
     Dropdown,DropdownItem,DropdownMenu,
-    TabPane,Tabs,Option,Select,Upload
+    TabPane,Tabs,Option,Select,Upload,Skeleton,SkeletonItem,Divider,
+    Link
 } from 'element-ui'
 /*按需引入*/
 export default () => {
+    Vue.use(Link)
+    Vue.use(Divider)
+    Vue.use(Skeleton)
+    Vue.use(SkeletonItem)    
     Vue.use(Select)
     Vue.use(Upload)
     Vue.use(Option)

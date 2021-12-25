@@ -352,13 +352,9 @@ export default {
     }
   }
   main {
-    background: @backage-color;
     width: @view-width;
     margin: auto;
     margin-top: 0.1rem;
-    box-shadow: @box-shadow;
-    border-radius: 0.1rem;
-    padding: 0.2rem;
   }
 }
 
@@ -378,26 +374,3 @@ export default {
 }
 </style>
 
-<style>
-.icon-time {
-  background-image: url("../assets/icon/time-hover.svg");
-}
-.icon-check {
-  background-image: url("../assets/icon/readNum-hover.svg");
-}
-.icon-like {
-  background-image: url("../assets/icon/likeNum-hover.svg");
-}
-.icon-hot {
-  background-image: url("../assets/icon/hot-hover.svg");
-}
-.icon-great {
-  background-image: url("../assets/icon/great-hover.svg");
-}
-.icon-collect {
-  background-image: url("../assets/icon/collect-hover.svg");
-}
-.icon-type {
-  background-image: url("../assets/icon/type-hover.svg");
-}
-</style>
