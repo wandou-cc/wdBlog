@@ -59,57 +59,8 @@
       <!-- 评论 -->
       <el-divider><i class="el-icon-chat-square"></i></el-divider>
       <div class="foot-comment">
-        <el-form ref="submitForm" :model="submitForm">
-          <el-form-item>
-            <el-input
-              type="textarea"
-              :rows="6"
-              show-word-limit
-              maxlength="100"
-              v-model="submitForm.commentContent"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <template v-for="item in commentList">
-          <div class="first-comment" :key="item.id">
-            <div class="comment-left">
-              <img src="" alt="" />
-            </div>
-            <div class="comment-right">
-              <p>{{ item.name }}</p>
-              <p>{{ item.comment }}</p>
-              <div>
-                <div>
-                  <p>time</p>
-                  <p>回复</p>
-                </div>
-                <p>浏览器</p>
-              </div>
-            </div>
-          </div>
-          <template v-if="item.children && item.children.length !== 0">
-            <div
-              v-for="_item in item.children"
-              :key="_item.id"
-              class="second-comment"
-            >
-              <div class="comment-left">
-                <img src="" alt="" />
-              </div>
-              <div class="comment-right">
-                <p>{{ _item.name }}</p>
-                <p>{{ _item.comment }}</p>
-                <div>
-                  <div>
-                    <p>time</p>
-                    <p>回复</p>
-                  </div>
-                  <p>浏览器</p>
-                </div>
-              </div>
-            </div>
-          </template>
-        </template>
+       
+        <comment :articleId="$route.query.articleId" />
       </div>
     </div>
   </div>
@@ -117,40 +68,15 @@
 
 
 <script>
+
 export default {
+
   data() {
     return {
       articleDetail: {},
       submitForm: {
         commentContent: "",
-      },
-      commentList: [
-        {
-          id: 1,
-          name: "小明",
-          comment: "我是小明",
-        },
-        {
-          id: 2,
-
-          name: "小红",
-          comment: "我是小红",
-        },
-        {
-          id: 3,
-
-          name: "小黑",
-          comment: "我是小黑",
-          children: [
-            {
-              id: 4,
-
-              name: "小红",
-              comment: "我是小红",
-            },
-          ],
-        },
-      ],
+      }
     };
   },
   mounted() {
@@ -284,19 +210,6 @@ export default {
           .el-textarea__inner {
             background-color: #eeeeee !important;
           }
-        }
-      }
-      .first-comment {
-        margin: 0.2rem 0rem;
-        display: flex;
-        height: 1rem;
-        .comment-left {
-          width: 1rem;
-          margin-right: 0.2rem;
-          border: 1px solid;
-        }
-        .comment-right {
-          flex: 1;
         }
       }
     }

@@ -20,9 +20,6 @@ const tools = {
             };
             return fmt;
         }
-        Vue.prototype.formatHot = (articleCheck,articleLike,articleCollect) => {
-            return (articleCheck + articleLike + articleCollect) * 3
-        }
     }
 }
 

@@ -352,6 +352,7 @@ export default {
     }
   }
   main {
+    min-height: calc(100vh - 1.2rem);
     width: @view-width;
     margin: auto;
     margin-top: 0.1rem;
