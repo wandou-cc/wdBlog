@@ -2,8 +2,10 @@
   <div>
     <div class="wd-avatar" v-if="loginStater">
       <div class="avatar-main">
-        <div>头部已经选择</div>
-        <div>中间头像选择</div>
+        <div class="avatar-main-top"><img src="" alt=""></div>
+        <div>
+
+        </div>
         <div>底部自己上传</div>
         <div>
           <div>上传</div>
@@ -37,6 +39,17 @@ export default {
   background: rgba(71, 71, 71, 0.6);
 }
 .avatar-main {
-    border: 1px solid red;
+    width: 60%;
+    height: 50%;
+    background-color: #fff;
+    border-radius: 0.05rem;
+}
+img {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: .03;
+}
+.avatar-main-top {
+  margin: auto;
 }
 </style>
