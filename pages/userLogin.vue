@@ -9,7 +9,11 @@
             <button
               class="user_unregistered-signup"
               id="signup-button"
-              @click="()=>{bounce = true;}"
+              @click="
+                () => {
+                  bounce = true;
+                }
+              "
             >
               注册
             </button>
@@ -58,10 +62,8 @@
                 type="submit"
                 value="登录"
                 class="forms_buttons-action"
-                @click="loginStater=true"
+                @click="requireLogin"
               />
-                <!-- @click="requireLogin" -->
-
             </div>
           </div>
 
@@ -112,22 +114,27 @@
         </div>
       </div>
     </section>
-    <updata-avatar :loginStater="loginStater" @changeLoginStater='loginStater=false'/>
+    <updata-avatar
+      v-if="loginStater"
+      :loginStater="loginStater"
+      @changeLoginStater="loginStater = false"
+      @getUserAvarat='getUserAvarat'
+    />
   </div>
 </template>
 
 <script>
-import updataAvatar from '../components/updataAvatar.vue';
+
 import {
   validateUserEmail,
   validateNew,
   validateUserName,
 } from "../plugins/rules";
 export default {
-  components: { updataAvatar },
+
   data() {
     return {
-      loginStater:false,
+      loginStater: false,
       bounce: false,
       signupForm: {
         userName: "",
@@ -135,8 +142,8 @@ export default {
         userMail: "",
       },
       loginForm: {
-        userPassword: "",
-        userMail: "",
+        userPassword: "123456",
+        userMail: "123@qq.com",
       },
 
       signupRules: {
@@ -151,11 +158,17 @@ export default {
         userPassword: [
           { validator: validateNew, trigger: "blur" },
           { min: 6, max: 8, message: "密码长度在6-8位", trigger: "blur" },
-        ]
+        ],
       },
+      user:{}
     };
   },
   mounted() {},
+  computed:{
+     userInfo() {
+      return this.$store.state.userInfo;
+    }
+  },
   methods: {
     requireSignup() {
       this.$refs.signupForm.validate((valid) => {
@@ -163,20 +176,12 @@ export default {
           this.$axios.post("/api/register", this.signupForm).then((res) => {
             let data = res.data;
             if (data.code === 200) {
-              this.$notify({
-                message: data.msg,
-                position: "bottom-right",
-                type: "success",
-              });
+              this.succrssNotification(data.msg)
             } else {
-              this.$notify({
-                message: data.msg,
-                position: "bottom-right",
-                type: "error",
-              });
+              this.errorNotification(data.msg)
             }
-            this.loginForm.userMail = this.signupForm.userMail
-            this.loginForm.userPassword = this.signupForm.userPassword
+            this.loginForm.userMail = this.signupForm.userMail;
+            this.loginForm.userPassword = this.signupForm.userPassword;
             this.bounce = false;
             this.$refs.signupForm.resetFields();
           });
@@ -185,6 +190,7 @@ export default {
         }
       });
     },
+
     // 登录
     requireLogin() {
       this.$refs.loginForm.validate((valid) => {
@@ -192,18 +198,19 @@ export default {
           this.$axios.post("/api/login", this.loginForm).then((res) => {
             let data = res.data;
             if (data.code === 200) {
-              this.$notify({
-                message: data.msg,
-                position: "bottom-right",
-                type: "success",
-              });
-              this.loginStater = true
+              this.succrssNotification(data.msg)
+              this.user = data.list
+              let user = JSON.parse(JSON.stringify(this.user))
+
+              if(data.list.userAvatar === null) {
+                this.$store.commit("changeUserInfo", user);
+                this.loginStater = true
+              } else {
+                this.getUserAvarat(this.user.userAvatar);
+                this.$router.push("/")
+              }
             } else {
-              this.$notify({
-                message: data.msg,
-                position: "bottom-right",
-                type: "error",
-              });
+              this.errorNotification(data.msg)
             }
           });
         } else {
@@ -211,6 +218,20 @@ export default {
         }
       });
     },
+
+    getUserAvarat(value) {
+      let user = JSON.parse(JSON.stringify(this.user))
+      this.$axios.post('/api/getUserAvatar',{avatarId:value}).then(res=>{
+        let data = res.data
+          if(data.code === 200){
+            user.userAvatar = data.list[0].imgUrl
+            this.user.userAvatar = data.list[0].imgUrl
+          } else {
+            user.userAvatar = ''
+          }
+        this.$store.commit("changeUserInfo", user);
+      })
+    }
   },
 };
 </script>
@@ -218,10 +239,6 @@ export default {
 <style lang="less" scoped>
 * {
   font-size: 0.16rem;
-}
-
-.wd-avatar {
-
 }
 
 /deep/.el-form {

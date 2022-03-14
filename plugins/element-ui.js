@@ -5,10 +5,12 @@ import {
     Pagination, Form, FormItem, Input, Tag, Notification,
     Dropdown,DropdownItem,DropdownMenu,
     TabPane,Tabs,Option,Select,Upload,Skeleton,SkeletonItem,Divider,
-    Link,Popover,Table,TableColumn
+    Link,Popover,Table,TableColumn,Timeline,TimelineItem
 } from 'element-ui'
 /*按需引入*/
 export default () => {
+    Vue.use(Timeline)
+    Vue.use(TimelineItem)
     Vue.use(TableColumn)
     Vue.use(Table)
     Vue.use(Popover)

@@ -1,23 +1,13 @@
 export const state = () => ({
-    technologyState: true,
     headerTitle: "",
     headerSeventhName: "",
-    activeIndex:""
+    userInfo:{},
+    authorityList:[]
 })
 
 export const mutations = {
     replaceState(state, query) {
         state = query
-    },
-    // 更改展示状态
-    chngeTechnologyState(state, query) {
-        let { technologyState } = query
-        // technologyState 为 true 的时候 展示 列表
-        if (technologyState) {
-            state.technologyState = true
-        } else {
-            state.technologyState = false
-        }
     },
     // 更改标题名称
     changeTechnologyTitle(state, query) {
@@ -29,9 +19,14 @@ export const mutations = {
         let { seventhName } = query
         state.headerSeventhName = seventhName
     },
-    // 更改头部选中hover状态
-    changeHeaderHoverIndex(state,query){
-        let { activeIndex } = query
-        state.activeIndex = activeIndex
+    // 更改用户状态
+    changeUserInfo(state,query) {
+        state.userInfo = query
+    },
+    // 添加用户未登录可以访问的路由地址
+    changAuthority(state,query) {
+        state.authorityList = query
     }
 }
+
+

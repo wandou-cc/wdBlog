@@ -11,20 +11,19 @@
                 mode="horizontal"
                 router
               >
+                <el-menu-item index="" class="wd-logo"
+                  ><img src="../assets/icon/logo1.png" alt="豌豆博客"
+                /></el-menu-item>
                 <el-menu-item index="/">首页</el-menu-item>
                 <el-menu-item index="/adminAbout">关于</el-menu-item>
                 <el-menu-item index="/userSponsor">赞助</el-menu-item>
-                <el-submenu index="5">
-                  <template slot="title">留言</template>
-                  <el-menu-item index="5-1">提交建议</el-menu-item>
-                  <el-menu-item index="5-2">提交问题</el-menu-item>
-                  <el-menu-item index="5-3">联系作者</el-menu-item>
-                </el-submenu>
-                <el-submenu index="2">
+                <!-- <el-menu-item index="/friendsLinks">友情链接</el-menu-item> -->
+
+                <el-menu-item index="/leaveMessage">反馈/留言</el-menu-item>
+                <!-- <el-submenu index="2">
                   <template slot="title">工具</template>
                   <el-menu-item index="2-1">选项1</el-menu-item>
-                </el-submenu>
-                <el-menu-item index="/friendsLinks">友情链接</el-menu-item>
+                </el-submenu> -->
                 <el-menu-item index="7" disabled v-if="headerSeventhName">{{
                   headerSeventhName
                 }}</el-menu-item>
@@ -51,7 +50,7 @@
           >
             <div class="header-left">
               <!-- 显示 技术列表 -->
-              <ul v-if="technologyState">
+              <ul v-if="!isAddTechnologyClass">
                 <li v-for="item in technologyList" :key="item.id">
                   {{ item.name }}
                 </li>
@@ -72,7 +71,7 @@
               class="my-account"
               @command="
                 (item) => {
-                  $router.push(item.path);
+                  jumpToAccount(item);
                 }
               "
             >
@@ -82,15 +81,16 @@
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <div class="account-avatar">
-                  <p></p>
+                  <p>
+                    <img :src="imgBaseUrl + avaratImg" v-if="avaratImg" />
+                    <img src="../assets/icon/logo.png" v-else />
+                  </p>
                 </div>
-                <el-dropdown-item
-                  v-for="item in accountList"
-                  :key="item.id"
-                  :command="item"
-                >
-                  <span>{{ item.name }}</span>
-                </el-dropdown-item>
+                <template v-for="item in accountList">
+                  <el-dropdown-item :key="item.id" :command="item">
+                    <span>{{ item.name }}</span>
+                  </el-dropdown-item>
+                </template>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -103,16 +103,17 @@
   </div>
 </template>
 <script>
+import { imgBaseUrl } from "~/plugins/imgUrl";
 export default {
   data() {
     return {
-      lastUrl: Object.freeze(["/postArticle", "/userLogin", "/myArticle"]),
-      accountList: Object.freeze([
+      imgBaseUrl,
+      accountList: [
         { path: "/userLogin", name: "注册/登录" },
         { path: "/postArticle", name: "发布文章" },
         { path: "/myArticle", name: "我的数据" },
         { path: "/adminPage", name: "管理页面" },
-      ]),
+      ],
       input: "",
       technologyList: [
         { id: 1, name: "js" },
@@ -120,12 +121,10 @@ export default {
       ],
       isAddTechnologyClass: false,
       headerHoverIndex: "/",
+      avaratImg: "",
     };
   },
   computed: {
-    technologyState() {
-      return this.$store.state.technologyState;
-    },
     headerTitle() {
       return this.$store.state.headerTitle;
     },
@@ -137,6 +136,10 @@ export default {
     // 根据路由来确定展示那个
     $route: {
       handler: function (item) {
+        // if (process.client) {
+        //   this.beforeEach(item.path);
+        // }
+
         this.headerHoverIndex = item.path;
         let result = this.accountList.filter((_item) => {
           return _item.path === item.path;
@@ -158,21 +161,45 @@ export default {
       deep: true,
       immediate: true,
     },
-
-    headerHoverIndex() {
-      this.$store.commit("changeHeaderHoverIndex", {
-        activeIndex: this.headerHoverIndex,
-      });
+    "$store.state": {
+      handler(n) {
+        this.avaratImg = n.userInfo.userAvatar;
+        if (n.userInfo.token) {
+          this.accountList[0] = { path: "", name: "退出登录" };
+        } else {
+          this.accountList[0] = { path: "/userLogin", name: "注册/登录" };
+        }
+        sessionStorage.setItem("store", JSON.stringify(n));
+      },
+      deep: true,
     },
   },
+
   mounted() {
     this.getStore();
     this.addEvent();
+    this.getAuthority();
   },
 
   methods: {
+    // beforeEach(path) {
+    //   debugger
+    //   let store = JSON.parse(sessionStorage.getItem("store"));
+    //   let authorityList = store.authorityList;
+    //   let userInfo = store.userInfo;
+    //   let authorityResult = authorityList.filter((item) => {
+    //     return item.authorityPath === path;
+    //   });
+    //   console.log(authorityList)
+    //   console.log(authorityResult)
+    //   if (authorityResult.length === 0 && !userInfo.token) {
+    //     this.errorNotification("请先登录");
+    //     this.$router.push("/userLogin");
+    //     return;
+    //   }
+    // },
     getStore() {
-      if (sessionStorage.getItem("store") && this.$route.path !== "/") {
+      if (sessionStorage.getItem("store")) {
         this.$store.replaceState(
           Object.assign(
             {},
@@ -186,27 +213,42 @@ export default {
       window.onscroll = () => {
         if (document.scrollingElement.scrollTop > 200) {
           this.isAddTechnologyClass = true;
-          this.$store.commit("chngeTechnologyState", {
-            technologyState: false,
-          });
         } else {
           this.isAddTechnologyClass = false;
-          this.$store.commit("chngeTechnologyState", { technologyState: true });
         }
       };
-      window.addEventListener("beforeunload", () => {
-        sessionStorage.setItem("store", JSON.stringify(this.$store.state));
-      });
-      // 监听历史记录 实现返回前进 功能
-      // window.onpopstate = (event) => {
-      //   this.$store.commit("changeHeaderSeventhName", {
-      //     seventhName: event.state.name,
-      //   });
-      // };
+    },
+    jumpToAccount(item) {
+      if (item.name === "退出登录") {
+        let store = JSON.parse(sessionStorage.getItem("store"));
+        store.userInfo = {};
+        sessionStorage.setItem("store", JSON.stringify(store));
+        this.getStore();
+        this.$router.push('/');
+        return;
+      }
+      this.$router.push(item.path);
     },
     contribute() {
       this.$router.push({ path: "/postArticle" });
     },
+    getAuthority() {
+      this.$axios.post("/api/getauthority").then((res) => {
+        let data = res.data;
+        if (data.code === 200) {
+          this.$store.commit("changAuthority", data.list);
+        } else {
+          this.$store.commit("changAuthority", {
+            authorityId: 1,
+            authorityName: "首页",
+            authorityPath: "/",
+          });
+        }
+      });
+    },
+     handleSelect(key, keyPath) {
+        console.log(key, keyPath);
+      }
   },
 };
 </script>
@@ -221,13 +263,22 @@ export default {
   }
   .wd-header {
     height: 100%;
+    .wd-logo {
+      display: flex;
+      align-items: center;
+      img {
+        width: 0.6rem;
+        height: 0.35rem;
+      }
+    }
     .header-top {
       border-bottom: 1px solid #ccc;
       width: 100%;
+      padding: 0rem 0.5rem;
       .header-top-main {
         display: flex;
         justify-content: space-between;
-        width: @view-width;
+        // width: @view-width;
         margin: auto;
       }
       .el-menu.el-menu--horizontal {
@@ -366,8 +417,11 @@ export default {
     height: 80%;
     margin: auto;
     width: 0.5rem;
-    // border: 1px solid tomato;
     border-radius: 0.05rem;
+    img {
+      height: 100%;
+      width: 100%;
+    }
   }
   i {
     font-size: 0.14rem;

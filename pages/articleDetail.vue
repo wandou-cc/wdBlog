@@ -59,7 +59,6 @@
       <!-- 评论 -->
       <el-divider><i class="el-icon-chat-square"></i></el-divider>
       <div class="foot-comment">
-       
         <comment :articleId="$route.query.articleId" />
       </div>
     </div>
@@ -68,15 +67,13 @@
 
 
 <script>
-
 export default {
-
   data() {
     return {
       articleDetail: {},
       submitForm: {
         commentContent: "",
-      }
+      },
     };
   },
   mounted() {
@@ -119,17 +116,9 @@ export default {
 
       this.$axios.post(api, form).then((res) => {
         if (res.data.code === 200) {
-          this.$notify({
-            message: res.data.list,
-            position: "bottom-right",
-            type: "success",
-          });
+          this.succrssNotification(res.data.list);
         } else {
-          this.$notify({
-            message: res.data.list,
-            position: "bottom-right",
-            type: "error",
-          });
+          this.errorNotification(res.data.list);
         }
         this.getarticleDetail();
       });

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { Notification } from 'element-ui'
 const tools = {
     install(Vue) {
         Vue.prototype.formatTime = (fmt, date) => {
@@ -19,6 +20,20 @@ const tools = {
                 };
             };
             return fmt;
+        }
+        Vue.prototype.succrssNotification = (msg) =>{
+            Notification({
+                message: msg,
+                position: "bottom-right",
+                type: "success",
+              });
+        },
+        Vue.prototype.errorNotification = (msg) =>{
+            Notification({
+                message: msg,
+                position: "bottom-right",
+                type: "error",
+              });
         }
     }
 }

@@ -139,18 +139,11 @@ export default {
         .then((res) => {
           this.submitForm.commentContent = "";
           if (res.data.code === 200) {
-            this.$notify({
-              message: res.data.list,
-              position: "bottom-right",
-              type: "success",
-            });
+            this.succrssNotification(res.data.list)
             this.getComment();
           } else {
-            this.$notify({
-              message: res.data.list,
-              position: "bottom-right",
-              type: "error",
-            });
+            this.errorNotification(res.data.list)
+
           }
         });
     },

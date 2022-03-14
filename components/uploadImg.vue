@@ -38,10 +38,10 @@ export default {
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG/PNG 格式!");
+        this.errorNotification("上传头像图片只能是 JPG/PNG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.errorNotification("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     },
@@ -51,28 +51,32 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 0.06rem;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+/deep/.avatar-uploader {
+  .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 0.06rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    height: 0.8rem;
+    &:hover {
+      border-color: #409eff;
+    }
+  }
 }
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
+
 .avatar-uploader-icon {
   font-size: 0.28rem;
   color: #8c939d;
   width: 2rem;
-  height: 1.4rem;
-  line-height: 1.4rem;
+  height: 0.8rem;
+  line-height: 0.8rem;
   text-align: center;
 }
 
 .avatar {
-  width: 2rem;
-  height: 1.4rem;
+  width: 100%;
+  height: 100%;
   display: block;
 }
 </style>

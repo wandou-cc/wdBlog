@@ -1,1 +1,1 @@
-export let imgBaseUrl = 'http://localhost:24080'
+export let imgBaseUrl = 'http://localhost:24081'

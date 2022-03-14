@@ -140,6 +140,7 @@ export default {
         size: 10,
         orders: "createTime",
       },
+
     };
   },
   watch: {
@@ -173,6 +174,7 @@ export default {
 
   //   }
   // },
+ 
   mounted() {
     this.imgUrl = imgBaseUrl;
     this.getArticleList();
@@ -181,9 +183,6 @@ export default {
     this.getBanner();
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     getBanner() {
       this.$axios.post("/api/banner").then((res) => {
         let data = res.data;

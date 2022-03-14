@@ -167,7 +167,7 @@ export default {
         articleIntroduction: "",
         articleImg: "",
         isComment: 1,
-        userId:'bf926190-1d0b-11ec-a5f7-2d648d641c9a'
+        userId:''
       },
       isShowRelease: false,
       imageUrl: "",
@@ -176,7 +176,7 @@ export default {
   watch: {
     isShowRelease() {
       this.isShowRelease && this.getTypeInfo();
-    },
+    }
   },
   mounted() {
     this.changeStateTitle();
@@ -191,20 +191,13 @@ export default {
       this.$store.commit("changeTechnologyTitle", { headerTitle: "添加博客" });
     },
     determineRelease() {
+      this.submitForm.userId = this.$store.state.userInfo.userId
       this.$axios.post("/api/addArticle", this.submitForm).then((res) => {
         if (res.data.code === 200) {
-          this.$notify({
-            message: "添加成功,请等待审核",
-            position: "bottom-right",
-            type: 'success'
-          });
+          this.succrssNotification('添加成功,请等待审核')
           this.isShowRelease = false
         }else {
-          this.$notify({
-            message: res.data.msg,
-            position: "bottom-right",
-            type: 'error'
-          });
+          this.errorNotification(res.data.msg)
         }
         this.reset()
       });
@@ -236,6 +229,7 @@ export default {
       this.submitForm.articleContent = '';
     }
   },
+
 };
 </script>
 
